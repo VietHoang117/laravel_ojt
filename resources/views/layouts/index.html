@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Datatable cha con đơn giản</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <style>
+        td.details-control {
+            cursor: pointer;
+            text-align: center;
+            color: #007bff;
+        }
+        .child-row {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<table id="example" class="display" style="width:100%">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Tên</th>
+        <th>Chức vụ</th>
+        <th>Phòng ban</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="details-control">+</td>
+        <td>Nguyễn Văn A</td>
+        <td>Nhân viên</td>
+        <td>Phòng Kinh Doanh</td>
+    </tr>
+    <tr>
+        <td class="details-control">+</td>
+        <td>Trần Văn B</td>
+        <td>Quản lý</td>
+        <td>Phòng Tài Chính</td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    $(document).ready(function() {
+        var table = $('#example').DataTable({
+            "paging": false
+        });
+
+        // Sự kiện click để mở rộng hoặc thu gọn hàng con
+        $('#example tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // Ẩn hàng con nếu đang hiển thị
+                row.child.hide();
+                tr.find('td.details-control').text('+');
+            } else {
+                // Hiển thị hàng con với nội dung đơn giản
+                var childContent = '<div class="child-row">' +
+                    '<strong>Số điện thoại:</strong> 0123456789<br>' +
+                    '<strong>Email:</strong> example@example.com' +
+                    '</div>';
+                row.child(childContent).show();
+                tr.find('td.details-control').text('-');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+if [ ! -z "$WWWUSER" ]; then
+    usermod -u $WWWUSER sail
+fi
+
+if [ ! -d /.composer ]; then
+    mkdir /.composer
+fi
+
+chmod -R ugo+rw /.composer
+
+if [ $# -gt 0 ]; then
+    exec gosu $WWWUSER "$@"
+else
+    echo "DoubleTC";
+    #/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+fi
+
+# cron job to restart nginx every 6 hour
+#(crontab -l ; echo "0 0 */4 * * nginx -s reload") | crontab -
+
+# Start crond in background
+#crond -l 2 -b
+
+#* * * * * root nginx -s reload >> /var/log/cron.log
+
+# Start nginx in foreground
+#echo "NGINX started, daemon will restart every 6 hours now.";
+
+chmod 777 -R /var/www/html/storage
+
+php artisan cache:clear
+php artisan migrate --force
+#php artisan migrate --path=database/migrations/pgsql --force
+php artisan db:seed --force
+php artisan vendor:publish --tag=public-assets --force
+#php artisan horizon:publish
+php artisan storage:link
+service supervisor start >/dev/null 2>&1 &
+
+/etc/init.d/php8.1-fpm start
+
+nginx
