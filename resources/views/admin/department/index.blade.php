@@ -52,8 +52,8 @@
                 <table id="example" class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>Tên</th>
-                        <th>Phòng Ban</th>
+                        <th>Phòng ban</th>
+                        <th>Phòng Ban Cha</th>
                         <th>Trạng Thái</th>
                         <th>Hành động</th>
                     </tr>
@@ -62,9 +62,15 @@
                     @foreach($data as $r)
                         <tr>
                             <td>
-                                {{ $r->name }}
+                                {{ $r->room_name }}
                             </td>
-                            <td>{{ $r->name }}</td>
+                            <td>
+                                <p>
+                                    @foreach ($r->departments as $department)
+                                     {{ $department->room_name }}
+                                    @endforeach
+                                </p>
+                            </td>
                             <td>
                                 {{ $r-> status  }}
                             </td>

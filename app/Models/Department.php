@@ -13,4 +13,9 @@ class Department extends Model
         'status',
         'parent_id'
     ];
+
+
+    public function departments() {
+        return $this->hasMany(Department::class, 'id', 'parent_id');
+    }    
 }

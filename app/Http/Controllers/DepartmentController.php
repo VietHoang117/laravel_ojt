@@ -6,6 +6,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\DepartmentStatusEnum;
 
 
 class DepartmentController extends Controller
@@ -13,7 +14,7 @@ class DepartmentController extends Controller
     public function index()
     {
 
-        $data = Department::all();
+        $data = Department::with('departments')->get();
 
         return view('admin.department.index', ['data' => $data]);
     }
@@ -26,9 +27,7 @@ class DepartmentController extends Controller
     public function save(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'parent_id' => 'required',
-            'room_name' => 'required',
-
+            'room_name' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -39,14 +38,12 @@ class DepartmentController extends Controller
         $inputs = $request->only([
             'parent_id',
             'room_name',
-
-
+            'status'
         ]);
 
-        $inputs['password'] = Hash::make($inputs['password']);
-        $inputs['position'] = md5('hoang');
+        $inputs['status'] = $request->has('status') ? DepartmentStatusEnum::ACTIVATED : DepartmentStatusEnum::DEACTIVATED;
 
-        User::create($inputs);
+        Department::create($inputs);
 
         return redirect()->route('departments.index');
 
@@ -56,14 +53,13 @@ class DepartmentController extends Controller
     {
         $data = Department::query()->findOrFail($id);
 
-        return view('admin.department.update', ['data' => $data]);
+        return view('admin.department.update', ['data' => $data, 'departments' => Department::select('id', 'room_name')->get()]);
     }
 
     public function saveEdit(Request $request, int $id)
     {
         $validator = Validator::make($request->all(), [
-            'parent_id' => 'required',
-            'room_name' => 'required',
+            'room_name' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -74,23 +70,16 @@ class DepartmentController extends Controller
         $inputs = $request->only([
             'parent_id',
             'room_name',
-
+            'status'
         ]);
 
-        $inputs['password'] = Hash::make($inputs['password']);
-        $inputs['position'] = md5('hoang');
+        $inputs['status'] = $request->has('status') ? DepartmentStatusEnum::ACTIVATED : DepartmentStatusEnum::DEACTIVATED;
+        
         $data = Department::query()
         ->findOrFail($id);
         $data->fill($inputs)->update();
 
         return redirect()->route('departments.index');
-
-
-
-
-
-
-
     }
 
     public function delete($id) {

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\Department;
 class UserController extends Controller
 {
     public function index()
@@ -21,7 +21,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        return view('admin.user.create');
+        return view('admin.user.create', ['departments' =>  Department::select('id', 'room_name')->get()]);
     }
 
     public function save(Request $request)

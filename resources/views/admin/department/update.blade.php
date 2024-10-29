@@ -1,54 +1,62 @@
 @extends('layouts.main')
 @section('title')
-    Tạo mới
+Tạo mới
 @stop
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary margin-auto">
-                    <div class="card-header">
-                        <h3 class="card-title">Chỉnh sửa</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    @if ($errors->any())
-                        @foreach ($errors->all() as $error)
-                            <span class="text-red ml-5">{{ $error }}</span>
-                        @endforeach
-                    @endif
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary margin-auto">
+                <div class="card-header">
+                    <h3 class="card-title">Chỉnh sửa</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                <span class="text-red ml-5">{{ $error }}</span>
+                @endforeach
+                @endif
 
-                    <form action="{{ route('department.edit', ['id' => $data->id])}}" method="post" enctype="multipart/form-data">
-                        @csrf
+                <form action="{{ route('departments.edit', ['id' => $data->id])}}" method="post"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="card-body">
                         <div class="card-body">
-                            <!-- <div class="form-group">
-                                <label for="exampleInputEmail1">Tiêu đề</label>
-                                <input type="text" class="form-control" name="title" placeholder="Enter title" value="{{old('title', $data->title)}}">
-                            </div> -->
                             <div class="form-group">
-                                <label for="exampleInputFile">File input</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" name="image" value="{{old('image', $data->image)}}" class="form-control" id="product_image">
-                                    </div>
-                                </div>
+                                <label>Tên</label>
+                                <input type="text" class="form-control" value="{{old('room_name', $data->room_name)}}"
+                                    name="room_name" placeholder="Enter ">
                             </div>
+
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Link</label>
-                                <input type="text" class="form-control" name="link" value="{{old('link', $data->link)}}" placeholder="Enter Link">
+                                <label class="form-label">Phòng ban</label>
+                                <select class="form-select" name="parent_id">
+                                    <option value="">--- Chọn phòng ban ---</option>
+                                    @foreach($departments as $department)
+                                    <option value="{{ $department->id }}"
+                                        {{ old('parent_id', $data->parent_id) == $department->id ? 'selected' : '' }}>
+                                        {{ $department->room_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Số thứ tự</label>
-                                <input type="number" class="form-control" name="location" value="{{old('location', $data->location)}}">
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status"
+                                    value="{{ old('status', $data->status) }}"
+                                    {{ old('status', $data->status ?? false) == \App\Enums\DepartmentStatusEnum::ACTIVATED ? 'checked' : '' }} />
+                                <label class="form-check-label" for="exampleCheck1">Kích Hoạt</label>
                             </div>
+
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
                         </div>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 @endsection
