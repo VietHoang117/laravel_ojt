@@ -44,8 +44,13 @@ class UserController extends Controller
             'email',
             'password',
             'phone_number',
-            
+            'department_id'
         ]);
+
+        if (empty($inputs['department_id'])) {
+            $inputs['department_id'] = 0;
+        }
+        // dd($inputs);
 
         $inputs['password'] = Hash::make($inputs['password']);
         $inputs['position'] = md5('hoang');
@@ -83,7 +88,7 @@ class UserController extends Controller
             'email',
             'password',
             'phone_number',
-            
+            'department_id'
         ]);
 
         $inputs['password'] = Hash::make($inputs['password']);

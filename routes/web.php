@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
@@ -19,10 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'Auth'], function () {
     Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/admin', [HomepageController::class, 'index'])->name('dashboard');
 
+    Route::get('check-in', [HomepageController::class, 'checkIn'])->name('check-in');
+    Route::get('check-out', [HomepageController::class, 'checkOut'])->name('check-out');
 
     Route::group(['prefix' => 'admin/users', 'as' => 'users.'], function () {
         Route::get('/', [UserController::class, 'index'])->name('users');

@@ -40,7 +40,7 @@ Tạo mới
                         </div>
                         <div class="form-group">
                             <label class="form-label">Phòng ban</label>
-                            <select class="form-select" name="parent_id">
+                            <select class="form-select" name="department_id">
                                 <option value="">--- Chọn phòng ban ---</option>
                                 @foreach($departments as $department)
                                 <option value="{{ $department->id }}">
