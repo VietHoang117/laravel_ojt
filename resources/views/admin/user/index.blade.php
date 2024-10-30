@@ -42,6 +42,7 @@ Tài Khoản
                                 onclick="return confirmDelete()">
                                 Xóa
                             </a>
+                            <a href="{{ route('users.edit', ['id' => $r->id])}}" class="btn btn-success">View</a>
 
                         </td>
                     </tr>

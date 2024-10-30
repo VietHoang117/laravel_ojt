@@ -68,7 +68,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email',
-            'password' =>'required',
+            'password' =>'nullable|min:8|confirmed',
             'phone_number'=>'required',
             // 'position'=>'required',
         ]);
@@ -92,7 +92,7 @@ class UserController extends Controller
         ->findOrFail($id);
         $data->fill($inputs)->update();
 
-        return redirect()->route('users.users');
+        return redirect()->route('users.users')->with('success', 'Thông tin người dùng đã được cập nhật.');
 
 
       
