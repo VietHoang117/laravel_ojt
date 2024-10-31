@@ -93,17 +93,18 @@ class UserController extends Controller
             'password',
             'phone_number',
             'department_id',
-            
         ]);
         
-        // if ($request->filled('password')) {
-        //     $inputs['password'] = Hash::make($inputs['password']);
-        // }
+        if ($request->filled('password')) {
+            $inputs['password'] = Hash::make($inputs['password']);
+        }
         if(empty($inputs['password'])) {
             unset($inputs['password']);
         };
-        dd($inputs);
-    //    dd($inputs);
+        if(empty($inputs['department_id'])) {
+            $inputs['department_id'] = 0;
+        };
+
         $inputs['position'] = md5('hoang');
         $data = User::query()
         ->findOrFail($id);
