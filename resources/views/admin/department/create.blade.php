@@ -33,7 +33,7 @@ Tạo mới
                                 <option value="">--- Chọn phòng ban ---</option>
                                 @foreach($departments as $department)
                                 <option value="{{ $department->id }}"
-                                    {{ old('parent_xid', $data->parent_id) == $department->id ? 'selected' : '' }}>
+                                    {{ old('parent_id', $department->parent_id) == $department->id ? 'selected' : '' }}>
                                     {{ $department->room_name }}
                                 </option>
                                 @endforeach

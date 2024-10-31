@@ -15,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
 
-        $data = User::all();
+        $data = User::with('department')->get();
 
         return view('admin.user.index', ['data' => $data]);
     }
@@ -69,7 +69,7 @@ class UserController extends Controller
     {
         $data = User::query()->findOrFail($id);
 
-        return view('admin.user.update', ['data' => $data]);
+        return view('admin.user.update',  [ 'data'=>$data, 'departments' =>  Department::select('id', 'room_name')->get(), 'roles' => Role::select('id', 'name')->get()]);
     }
 
     public function saveEdit(Request $request, int $id)
@@ -92,16 +92,17 @@ class UserController extends Controller
             'email',
             'password',
             'phone_number',
-            'department_id'
+            'department_id',
+            
         ]);
-
-        if ($request->filled('password')) {
-            $inputs['password'] = Hash::make($inputs['password']);
-        }
+        
+        // if ($request->filled('password')) {
+        //     $inputs['password'] = Hash::make($inputs['password']);
+        // }
         if(empty($inputs['password'])) {
             unset($inputs['password']);
         };
-        // dd($inputs);
+        dd($inputs);
     //    dd($inputs);
         $inputs['position'] = md5('hoang');
         $data = User::query()
@@ -111,11 +112,6 @@ class UserController extends Controller
         return redirect()->route('users.users')->with('success', 'Thông tin người dùng đã được cập nhật.');
 
 
-      
-
-        
-        
-    
     }
 
     public function delete($id) {

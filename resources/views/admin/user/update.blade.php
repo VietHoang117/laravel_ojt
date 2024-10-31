@@ -38,7 +38,18 @@
                                 <label for="exampleInputEmail1">Số Điện Thoại</label>
                                 <input type="text" class="form-control" value="{{ old('phone_number', $data->phone_number) }}" name="phone_number" placeholder="Enter ">
                             </div>
-                            
+                            <div class="form-group">
+                            <label class="form-label">Phòng ban</label>
+                            <select class="form-select" name="parent_id">
+                                <option value="">--- Chọn phòng ban ---</option>
+                                @foreach($departments as $department)
+                                <option value="{{ $department->id }}"
+                                    {{ old('parent_id', $data->parent_id) == $department->id ? 'selected' : '' }}>
+                                    {{ $department->room_name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
                             
                         </div>
                         <div class="card-footer">

@@ -32,11 +32,11 @@ Tạo mới
 
                             <div class="form-group">
                                 <label class="form-label">Phòng ban</label>
-                                <select class="form-select" name="parent_id">
+                                <select class="form-select" name="department_id">
                                     <option value="">--- Chọn phòng ban ---</option>
                                     @foreach($departments as $department)
                                     <option value="{{ $department->id }}"
-                                        {{ old('parent_id', $data->parent_id) == $department->id ? 'selected' : '' }}>
+                                        {{ old('department_id', $data->department_id) == $department->id ? 'selected' : '' }}>
                                         {{ $department->room_name }}
                                     </option>
                                     @endforeach

@@ -17,6 +17,7 @@ Tài Khoản
                     <tr>
                         <th>Tên </th>
                         <th>Email</th>
+                        <th>Phòng Ban</th>
                         <th>Thời gian chấm công </th>
                         <th>Hành động</th>
                     </tr>
@@ -32,6 +33,9 @@ Tài Khoản
                         </td>
                         <td>
                             {{ $r->email }}
+                        </td>
+                        <td>
+                            {{$r->department ? $r->department->room_name:''}}
                         </td>
                         <td>
                             {{$r->time}}
