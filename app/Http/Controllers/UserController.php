@@ -77,7 +77,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email',
-            'password' =>'nullable|min:8|confirmed',
+            'password' =>'nullable|min:8',
             'phone_number'=>'required',
             // 'position'=>'required',
         ]);
@@ -95,7 +95,14 @@ class UserController extends Controller
             'department_id'
         ]);
 
-        $inputs['password'] = Hash::make($inputs['password']);
+        if ($request->filled('password')) {
+            $inputs['password'] = Hash::make($inputs['password']);
+        }
+        if(empty($inputs['password'])) {
+            unset($inputs['password']);
+        };
+        // dd($inputs);
+    //    dd($inputs);
         $inputs['position'] = md5('hoang');
         $data = User::query()
         ->findOrFail($id);

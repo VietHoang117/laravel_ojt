@@ -59,7 +59,7 @@ td.details-control {
                             </p>
                         </td>
                         <td>
-                            {{ $r-> status  }}
+                            {{ $r->status === 'activated' ? 'Đã kích hoạt' : 'Chưa kích hoạt'  }}
                         </td>
                         <td>
                             <a href="{{ route('departments.edit', ['id' => $r->id])}}" class="btn btn-success">Sửa</a>

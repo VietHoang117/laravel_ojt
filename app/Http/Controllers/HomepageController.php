@@ -44,7 +44,7 @@ class HomepageController extends Controller
                 'check_out' => $attendance->check_out,
                 'total_time' =>  $checkOutTime->diff($checkInTime)->format('%H:%I:%S'),
                 'late' => $formattedLateTime,
-                'status' => $attendance
+                'status' => $attendance->status
             ];
         });
         
