@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Department;
+use App\Models\Role;
 class UserController extends Controller
 {
     public function index()
@@ -21,7 +22,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        return view('admin.user.create', ['departments' =>  Department::select('id', 'room_name')->get()]);
+        return view('admin.user.create', ['departments' =>  Department::select('id', 'room_name')->get(), 'roles' => Role::select('id', 'name')->get()]);
     }
 
     public function save(Request $request)
@@ -31,6 +32,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' =>'required',
             'phone_number'=>'required',
+            'role_id' => 'required'
             // 'position'=>'required',
         ]);
 
@@ -44,18 +46,20 @@ class UserController extends Controller
             'email',
             'password',
             'phone_number',
-            'department_id'
+            'department_id',
+            'role_id'
         ]);
 
         if (empty($inputs['department_id'])) {
             $inputs['department_id'] = 0;
         }
-        // dd($inputs);
-
+     
         $inputs['password'] = Hash::make($inputs['password']);
         $inputs['position'] = md5('hoang');
        
-        User::create($inputs);
+        $user = User::create($inputs);
+
+        $user->roles()->sync([$inputs['role_id']]);
 
         return redirect()->route('users.users');
 

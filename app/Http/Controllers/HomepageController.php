@@ -24,6 +24,7 @@ class HomepageController extends Controller
 
         $data = Attendance::with(['user', 'user.department'])
         ->where('user_id', $auth->id)
+        ->orderByDesc('date')
         ->get()
         ->map(callback: function($attendance)use($start_time) {
             $checkInTime = Carbon::parse($attendance->check_in);

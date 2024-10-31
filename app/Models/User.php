@@ -43,7 +43,7 @@ class User extends Authenticatable
         }
 
         // Kiểm tra xem người dùng có quyền cụ thể không
-        return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
+        return $this->roles()->whereHas('permissions', callback: function ($query) use ($permission) {
             $query->where('name', $permission);
         })->exists();
     }
