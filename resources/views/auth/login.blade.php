@@ -32,16 +32,7 @@
                                 <div class="w-100">
                                     <h3 class="mb-4">Đăng Nhập</h3>
                                 </div>
-                                <div class="w-100">
-                                    <p class="social-media d-flex justify-content-end">
-                                        <a href="#"
-                                            class="social-icon d-flex align-items-center justify-content-center"><span
-                                                class="fa fa-facebook"></span></a>
-                                        <a href="#"
-                                            class="social-icon d-flex align-items-center justify-content-center"><span
-                                                class="fa fa-twitter"></span></a>
-                                    </p>
-                                </div>
+
                             </div>
                             <form action="{{ route('login') }}" method="post">
                                 @csrf
@@ -56,7 +47,7 @@
                                 </div>
                                 <div class="input-group mb-3">
                                     <input type="password" name="password" class="form-control" placeholder="Password">
-                                    <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password" ></span>
+
                                 </div>
                                 <div class="form-group d-md-flex">
                                     <div class="w-50 text-left">
@@ -79,8 +70,7 @@
                                 </div>
 
                             </form>
-                            <p class="text-center">Bạn không phải thành viên? <a data-toggle="tab" href="#signup">Đăng
-                                    Kí</a></p>
+                            <p class="text-center">Bạn không phải thành viên? <a data-toggle="tab" href="#signup">Đăng Kí</a></p>
                         </div>
                     </div>
                 </div>

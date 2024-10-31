@@ -58,6 +58,10 @@ baclv
                 </tbody>
             </table>
         </div>
+        
+        <!-- Thêm khoảng cách giữa hai bảng -->
+        <div class="my-8"></div>
+
         <div class="col-md-12 text-left">
             <h1>Danh sách chấm công</h1>
         </div>
