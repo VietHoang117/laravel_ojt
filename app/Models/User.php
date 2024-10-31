@@ -26,10 +26,27 @@ class User extends Authenticatable
         'department_id'
     ];
 
-    public function department() {
+    public function department()
+    {
         return $this->belongsTo(Department::class, 'department_id');
     }
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
+
+    public function hasPermission($permission)
+    {
+        if ($this->roles()->where('is_system_role', true)->exists()) {
+            return true;
+        }
+
+        // Kiểm tra xem người dùng có quyền cụ thể không
+        return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
+            $query->where('name', $permission);
+        })->exists();
+    }
 
     /**
      * The attributes that should be hidden for serialization.
