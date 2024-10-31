@@ -20,31 +20,36 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'Auth'], function () {
     Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/admin', [HomepageController::class, 'index'])->name('dashboard');
+    Route::get('/admin', [HomepageController::class, 'index'])->name('dashboard')->middleware('permission:view_dashboard');
 
-    Route::get('check-in', [HomepageController::class, 'checkIn'])->name('check-in');
-    Route::get('check-out', [HomepageController::class, 'checkOut'])->name('check-out');
+    Route::get('check-in', [HomepageController::class, 'checkIn'])->name('check-in')->middleware('permission:check_in');
+    Route::get('check-out', [HomepageController::class, 'checkOut'])->name('check-out')->middleware('permission:check_out');
 
-    Route::group(['prefix' => 'admin/users', 'as' => 'users.'], function () {
-        Route::get('/', [UserController::class, 'index'])->name('users');
-        Route::get('/store', [UserController::class, 'store'])->name('store');
-        Route::post('/save', [UserController::class, 'save'])->name('save');
-        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit');
-        Route::post('/edit/{id}', [UserController::class, 'saveEdit']);
-        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete');
+    Route::group(['middleware' => ['permission:view_user|create_user|edit_user|delete_user']], function () {
+        Route::group(['prefix' => 'admin/users', 'as' => 'users.'], function () {
+            Route::get('/', [UserController::class, 'index'])->name('users');
+            Route::get('/store', [UserController::class, 'store'])->name('store');
+            Route::post('/save', [UserController::class, 'save'])->name('save');
+            Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [UserController::class, 'saveEdit']);
+            Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete');
+        });
+    });
+
+    Route::group(['middleware' => ['permission:view_department|create_department|edit_department|delete_department']], function () {
+        Route::group(['prefix' => 'admin/department', 'as' => 'departments.'], function () {
+            Route::get('/', [DepartmentController::class, 'index'])->name('index');
+            Route::get('/store', [DepartmentController::class, 'store'])->name('store');
+            Route::post('/save', [DepartmentController::class, 'save'])->name('save');
+            Route::get('/edit/{id}', [DepartmentController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [DepartmentController::class, 'saveEdit']);
+            Route::get('/delete/{id}', [DepartmentController::class, 'delete'])->name('delete');
+        });
     });
 });
 
-Route::group(['prefix' => 'admin/department', 'as' => 'departments.'], function () {
-    Route::get('/', [DepartmentController::class, 'index'])->name('index');
-    Route::get('/store', [DepartmentController::class, 'store'])->name('store');
-    Route::post('/save', [DepartmentController::class, 'save'])->name('save');
-    Route::get('/edit/{id}', [DepartmentController::class, 'edit'])->name('edit');
-    Route::post('/edit/{id}', [DepartmentController::class, 'saveEdit']);
-    Route::get('/delete/{id}', [DepartmentController::class, 'delete'])->name('delete');
-});
 
-Route::get('/', function() {
+Route::get('/', function () {
     return view('welcome');
 });
 

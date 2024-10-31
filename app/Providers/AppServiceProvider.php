@@ -3,7 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +20,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+//        View::composer('*', function ($view) {
+//            $user = Auth::user();
+//            $isSystemRole = $user && $user->roles()->where('is_system_role', true)->exists();
+//            $permissions = $isSystemRole ? collect() : $user->roles->flatMap->permissions->pluck('name')->unique();
+//
+//            $view->with(compact('permissions', 'isSystemRole'));
+//
+//        });
     }
 }
