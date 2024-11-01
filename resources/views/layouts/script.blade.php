@@ -66,9 +66,8 @@
             "info": true,
             "autoWidth": false,
             "responsive": true,
-            "ordering": false
         });
-        
+
     });
     function confirmDelete() {
         return confirm('Bạn có chắc chắn muốn xóa không?');

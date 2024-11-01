@@ -47,7 +47,31 @@ class HomepageController extends Controller
                 'status' => $attendance->status
             ];
         });
-        
+
+        $dataTotals = Attendance::with(['user', 'user.department'])
+            ->orderByDesc('date')
+            ->get()
+            ->map(callback: function($attendance)use($start_time) {
+                $checkInTime = Carbon::parse($attendance->check_in);
+                $checkOutTime = Carbon::parse($attendance->check_out);
+
+                $lateMinutes = $start_time->diffInMinutes($checkInTime);
+                // Tính giờ và phút
+                $hours = floor($lateMinutes / 60);
+                $minutes = $lateMinutes % 60;
+                $formattedLateTime = sprintf('%02d:%02d', $hours, $minutes);
+
+                return [
+                    'name' => $attendance->user->name,
+                    'room_name' =>  $attendance->user->department->room_name ?? '',
+                    'date' => $attendance->date,
+                    'check_in' => $attendance->check_in,
+                    'check_out' => $attendance->check_out,
+                    'total_time' =>  $checkOutTime->diff($checkInTime)->format('%H:%I:%S'),
+                    'late' => $formattedLateTime,
+                    'status' => $attendance->status
+                ];
+            });
 
         $checkIn = Attendance::query()
             ->where('user_id', $auth->id)
@@ -62,21 +86,21 @@ class HomepageController extends Controller
             ->exists();
 
             // dd($checkIn);
-       
-        return view('admin.dashboard', ['data' => $data, 'time' => $time, 'checkIn' => !$checkIn, 'checkOut' => !$checkOut]);
+
+        return view('admin.dashboard', ['data' => $data,'dataTotals' => $dataTotals, 'time' => $time, 'checkIn' => !$checkIn, 'checkOut' => !$checkOut]);
     }
 
     public function checkIn() {
         $auth = Auth::user();
 
         $now = now();
-    
+
         $check = Attendance::query()
                 ->where('user_id', $auth->id)
                 ->whereDate('date', $now)
                 ->whereNotNull('check_in')
                 ->exists();
-        
+
         if (!$check) {
             Attendance::create([
                 'user_id' => $auth->id,
@@ -96,7 +120,7 @@ class HomepageController extends Controller
         $auth = Auth::user();
 
         $now = now();
-    
+
         $check = Attendance::query()
                 ->where('user_id', $auth->id)
                 ->whereDate('date', $now)
