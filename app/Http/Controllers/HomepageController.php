@@ -7,10 +7,11 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class HomepageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $auth = Auth::user();
 
@@ -48,30 +49,49 @@ class HomepageController extends Controller
             ];
         });
 
-        $dataTotals = Attendance::with(['user', 'user.department'])
-            ->orderByDesc('date')
-            ->get()
-            ->map(callback: function($attendance)use($start_time) {
-                $checkInTime = Carbon::parse($attendance->check_in);
-                $checkOutTime = Carbon::parse($attendance->check_out);
 
-                $lateMinutes = $start_time->diffInMinutes($checkInTime);
-                // Tính giờ và phút
-                $hours = floor($lateMinutes / 60);
-                $minutes = $lateMinutes % 60;
-                $formattedLateTime = sprintf('%02d:%02d', $hours, $minutes);
+        // Dành cho quyền admin xem hết nhân viên
+        $search = $request->input('search');
+        
+        $dataTotals = Attendance::with(['user', 'user.department']);
 
-                return [
-                    'name' => $attendance->user->name,
-                    'room_name' =>  $attendance->user->department->room_name ?? '',
-                    'date' => $attendance->date,
-                    'check_in' => $attendance->check_in,
-                    'check_out' => $attendance->check_out,
-                    'total_time' =>  $checkOutTime->diff($checkInTime)->format('%H:%I:%S'),
-                    'late' => $formattedLateTime,
-                    'status' => $attendance->status
-                ];
+        if ($search) {
+            $dataTotals->where(function($query) use ($search) {
+                $query->whereHas('user', function($query) use ($search) {
+                    $query->where('name', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('user.department', function($query) use ($search) {
+                    $query->where('room_name', 'LIKE', "%{$search}%");
+                })
+                ->orWhere('date', 'LIKE', "%{$search}%");
+                ;
             });
+        };
+
+        $dataTotals = $dataTotals
+        ->orderByDesc('date')
+        ->get()
+        ->map(callback: function($attendance)use($start_time) {
+            $checkInTime = Carbon::parse($attendance->check_in);
+            $checkOutTime = Carbon::parse($attendance->check_out);
+
+            $lateMinutes = $start_time->diffInMinutes($checkInTime);
+            // Tính giờ và phút
+            $hours = floor($lateMinutes / 60);
+            $minutes = $lateMinutes % 60;
+            $formattedLateTime = sprintf('%02d:%02d', $hours, $minutes);
+
+            return [
+                'name' => $attendance->user->name,
+                'room_name' =>  $attendance->user->department->room_name ?? '',
+                'date' => $attendance->date,
+                'check_in' => $attendance->check_in,
+                'check_out' => $attendance->check_out,
+                'total_time' =>  $checkOutTime->diff($checkInTime)->format('%H:%I:%S'),
+                'late' => $formattedLateTime,
+                'status' => $attendance->status
+            ];
+        });
 
         $checkIn = Attendance::query()
             ->where('user_id', $auth->id)

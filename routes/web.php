@@ -22,6 +22,9 @@ Route::group(['middleware' => 'Auth'], function () {
 
     Route::get('/admin', [HomepageController::class, 'index'])->name('dashboard')->middleware('permission:view_dashboard');
 
+    Route::get('/admin/search', [HomepageController::class, 'index'])->name('search');
+
+
     Route::get('check-in', [HomepageController::class, 'checkIn'])->name('check-in')->middleware('permission:check_in');
     Route::get('check-out', [HomepageController::class, 'checkOut'])->name('check-out')->middleware('permission:check_out');
 

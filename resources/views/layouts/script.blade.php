@@ -4,7 +4,7 @@
 <script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-    $.widget.bridge('uibutton', $.ui.button)
+$.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
 <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -57,22 +57,32 @@
 <!-- AdminLTE for demo purposes -->
 
 <script>
-    $(function () {
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-
+$(function() {
+    $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
     });
-    function confirmDelete() {
-        return confirm('Bạn có chắc chắn muốn xóa không?');
-    }
+
+});
+$(function() {
+    $('#example3').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "responsive": true,
+    });
+
+});
+
+function confirmDelete() {
+    return confirm('Bạn có chắc chắn muốn xóa không?');
+}
 </script>
-
-
-
