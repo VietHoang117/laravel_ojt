@@ -22,13 +22,10 @@
                     <tr>
                         {{ session(key: 'check') }}
                         <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Tên</th>
-                        <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Ngày
-                        </th>
+                        <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Ngày</th>
                         <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Thứ</th>
-                        <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Giờ Vào
-                        </th>
-                        <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Giờ ra
-                        </th>
+                        <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Giờ Vào</th>
+                        <th class="py-2 px-4 bg-gray-200 text-gray-600 font-bold uppercase text-sm text-center">Giờ ra</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -77,7 +74,7 @@
                         <th>Giờ đã làm</th>
                         <th>Muộn Giờ</th>
                         <th>Trạng Thái</th>
-                        {{--                        <th>Hành động</th>--}}
+                        {{--<th>Hành động</th>--}}
                     </tr>
                     </thead>
                     <tbody>
@@ -101,6 +98,16 @@
 
 
             <div class="my-8"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <form method="get" action="/search">
+                            <div class="input-group">
+                                <input class="form-control" name="search" placeholder="Tìm Kiếm...">
+                                <button type="submit" class="btn btn-primary">Tìm Kiếm </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             @if(App\Helpers\PermissionHelper::can('is-system-admin'))
                 <div class="col-md-12 text-left">
                     <h1>Danh sách chấm công tất cả nhân viên</h1>

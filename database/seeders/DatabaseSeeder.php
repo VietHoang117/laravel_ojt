@@ -13,8 +13,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RolesSeeder::class
-            // thêm các seeder khác ở đây nếu có
+            RolesSeeder::class,
+            UserSeeder::class,
+            Attendance::class,
+            Department::class
         ]);
     }
 }

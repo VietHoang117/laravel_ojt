@@ -66,6 +66,17 @@ Tạo mới
                                 @endforeach
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Vai trò</label>
+                            <select class="form-select" name="role_id">
+                                <option value="">--- Chọn vai trò ---</option>
+                                @foreach($roles as $role)
+                                <option value="{{ $role->id }}">
+                                    {{ $role->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
 
                     </div>
                     <div class="card-footer">
