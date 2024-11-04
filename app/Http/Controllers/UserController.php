@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Department;
 use App\Models\Role;
+
+use App\Imports\UsersImport;
+use App\Exports\UsersExport;
+use Maatsebsite\Excel\Facades\Excel;
 class UserController extends Controller
 {
     public function index()
@@ -119,5 +123,20 @@ class UserController extends Controller
         $data = User::query()->findOrFail($id);
         $data->delete();
         return back()->with('success', 'Xóa thành công!');
+    }
+
+    //import-export
+    public function view(){
+        return view("dashboard");
+    }
+
+    public function import(){
+        Excel::Import(new UsersImport, request()->file('file'));
+
+        return redirect()->back();
+    }
+
+    public function export(){
+        return Export::download(new UsersExport, 'users.xlsx');
     }
 }

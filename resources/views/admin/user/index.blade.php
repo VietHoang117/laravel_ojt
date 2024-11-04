@@ -4,6 +4,15 @@ Tài Khoản
 @stop
 @section('content')
 <div class="container-fluid">
+
+    <form action="{{url('/import')}}" method="port" enctype="multipart/form-data">
+        @csrf
+        <input type="file" name="file">
+        <input type="submit" value="Import Data" class="btn btn-primary">
+
+        <a href="{{url('export')}}" class="btn btn-primary">Export Data</a>
+
+    </form>
     <div class="row">
         <div class="col-md-6 text-left">
             <h4>Danh Sách Tài Khoản</h4>
@@ -46,7 +55,7 @@ Tài Khoản
                                 onclick="return confirmDelete()">
                                 Xóa
                             </a>
-                            <a href="{{ route('users.edit', ['id' => $r->id])}}" class="btn btn-success">View</a>
+                            
 
                         </td>
                     </tr>

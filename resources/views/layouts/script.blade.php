@@ -57,30 +57,8 @@ $.widget.bridge('uibutton', $.ui.button)
 <!-- AdminLTE for demo purposes -->
 
 <script>
-$(function() {
-    $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": true,
-        "responsive": true,
-    });
 
-});
-$(function() {
-    $('#example3').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": true,
-        "responsive": true,
-    });
 
-});
 
 function confirmDelete() {
     return confirm('Bạn có chắc chắn muốn xóa không?');

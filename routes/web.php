@@ -56,3 +56,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get("/view",[UserController::class,"view"]);
+
+Route::post("/improt",[UserController::class,"import"]);
+
+Route::get("/export",[UserController::class,"export"]);
+

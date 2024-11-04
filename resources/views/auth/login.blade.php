@@ -56,9 +56,7 @@
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
-                                    <div class="w-50 text-md-right">
-                                        <a href="#">Quên Mật Khẩu</a>
-                                    </div>
+                                    
                                 </div>
                                 <div class="row">
 
@@ -70,7 +68,7 @@
                                 </div>
 
                             </form>
-                            <p class="text-center">Bạn không phải thành viên? <a data-toggle="tab" href="#signup">Đăng Kí</a></p>
+                           
                         </div>
                     </div>
                 </div>
