@@ -140,7 +140,7 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function export(){
-        return Export::download(new UsersExport, 'users.xlsx');
+    public function exportUsers(){
+        return Excel::download(new UsersExport, 'users.xlsx');
     }
 }

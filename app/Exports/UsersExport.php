@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class UsersExport implements FromCollection
 {
@@ -12,8 +13,17 @@ class UsersExport implements FromCollection
     */
     public function collection()
     {
-        $user=User::select('name','email','room_name')->get();
-        return $user;
-        // return User::all();
+        return User::all();
+    }
+
+    public function headings(): array
+    {
+        return [
+            'ID',
+            'Tên người dùng',
+            'Email',
+            'Ngày tạo',
+            'Ngày cập nhật',
+        ];
     }
 }

@@ -10,6 +10,8 @@ Tài Khoản
         <input type="file" name="file">
         <button type="submit" class="btn-dark">Import Users</button>
     </form>
+    <a href="{{ route('export.users') }}" class="btn btn-primary">Export Users</a>
+
     <div class="row">
         <div class="col-md-6 text-left">
             <h4>Danh Sách Tài Khoản</h4>

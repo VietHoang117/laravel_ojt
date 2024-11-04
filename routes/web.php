@@ -39,6 +39,7 @@ Route::group(['middleware' => 'Auth'], function () {
         });
 
         Route::post('/import-users', [UserController::class, 'importUsers'])->name('import.users');
+        Route::get('/export-users', [UserController::class, 'exportUsers'])->name('export.users');
 
     });
 
