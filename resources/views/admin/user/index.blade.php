@@ -5,13 +5,10 @@ Tài Khoản
 @section('content')
 <div class="container-fluid">
 
-    <form action="{{url('/import')}}" method="port" enctype="multipart/form-data">
+    <form action="{{ route('import.users') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="file" name="file">
-        <input type="submit" value="Import Data" class="btn btn-primary">
-
-        <a href="{{url('export')}}" class="btn btn-primary">Export Data</a>
-
+        <button type="submit" class="btn-dark">Import Users</button>
     </form>
     <div class="row">
         <div class="col-md-6 text-left">
@@ -55,7 +52,7 @@ Tài Khoản
                                 onclick="return confirmDelete()">
                                 Xóa
                             </a>
-                            
+
 
                         </td>
                     </tr>

@@ -13,7 +13,7 @@ use App\Models\Role;
 
 use App\Imports\UsersImport;
 use App\Exports\UsersExport;
-use Maatsebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 class UserController extends Controller
 {
     public function index()
@@ -57,10 +57,10 @@ class UserController extends Controller
         if (empty($inputs['department_id'])) {
             $inputs['department_id'] = 0;
         }
-     
+
         $inputs['password'] = Hash::make($inputs['password']);
         $inputs['position'] = md5('hoang');
-       
+
         $user = User::create($inputs);
 
         $user->roles()->sync([$inputs['role_id']]);
@@ -98,7 +98,7 @@ class UserController extends Controller
             'phone_number',
             'department_id',
         ]);
-        
+
         if ($request->filled('password')) {
             $inputs['password'] = Hash::make($inputs['password']);
         }
@@ -130,7 +130,11 @@ class UserController extends Controller
         return view("dashboard");
     }
 
-    public function import(){
+    public function importUsers(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
         Excel::Import(new UsersImport, request()->file('file'));
 
         return redirect()->back();

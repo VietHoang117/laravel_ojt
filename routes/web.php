@@ -37,6 +37,9 @@ Route::group(['middleware' => 'Auth'], function () {
             Route::post('/edit/{id}', [UserController::class, 'saveEdit']);
             Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete');
         });
+
+        Route::post('/import-users', [UserController::class, 'importUsers'])->name('import.users');
+
     });
 
     Route::group(['middleware' => ['permission:view_department|create_department|edit_department|delete_department']], function () {
@@ -57,8 +60,6 @@ Route::get('/', function () {
 });
 
 Route::get("/view",[UserController::class,"view"]);
-
-Route::post("/improt",[UserController::class,"import"]);
 
 Route::get("/export",[UserController::class,"export"]);
 
