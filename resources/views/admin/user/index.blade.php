@@ -8,9 +8,10 @@ Tài Khoản
     <form action="{{ route('import.users') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="file" name="file">
-        <button type="submit" class="btn-dark">Import Users</button>
+        <button type="submit" class="btn btn-primary">Import Users</button>
+        <a href="{{ route('export.users') }}" class="btn btn-primary">Export Users</a>
     </form>
-    <a href="{{ route('export.users') }}" class="btn btn-primary">Export Users</a>
+    
 
     <div class="row">
         <div class="col-md-6 text-left">
