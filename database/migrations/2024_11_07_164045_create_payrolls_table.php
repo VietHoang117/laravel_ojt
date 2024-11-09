@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payrolls', function (Blueprint $table) {
+        
             Schema::create('payrolls', function (Blueprint $table) {
                 $table->id();
+                $table->unsignedBigInteger('user_id');
                 $table->integer('valid_workdays');
                 $table->integer('invalid_workdays');
                 $table->string('month'); // E.g., "2024-11"
@@ -23,7 +24,7 @@ return new class extends Migration
                 $table->string('updated_by')->nullable();
                 $table->timestamp('updated_at')->nullable();
             });
-        });
+        
     }
 
     /**

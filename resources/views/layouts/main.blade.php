@@ -39,35 +39,47 @@
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_dashboard'))
-                                <a href="{{ route('dashboard')  }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Chấm Công
-                                    </p>
-                                </a>
+                            <a href="{{ route('dashboard')  }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Chấm Công
+                                </p>
+                            </a>
                             @endif
                         </li>
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_user'))
-                                <a href="{{ route('users.users')  }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Tài Khoản
-                                    </p>
-                                </a>
+                            <a href="{{ route('users.users')  }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Tài Khoản
+                                </p>
+                            </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_department'))
-                                <a href="{{ route('departments.index')  }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Phòng ban
-                                    </p>
-                                </a>
+                            <a href="{{ route('departments.index')  }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Phòng ban
+                                </p>
+                            </a>
                             @endif
                         </li>
+
+                        <li class="nav-item">
+                            @if(App\Helpers\PermissionHelper::can('view_payroll'))
+                            <a href="{{ route('payrolls.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Bảng Lương
+                                </p>
+                            </a>
+                            @endif
+                        </li>
+
 
                     </ul>
                 </nav>

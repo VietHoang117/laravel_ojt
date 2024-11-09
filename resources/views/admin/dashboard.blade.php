@@ -56,7 +56,11 @@ Trang chủ
                         </td>
                     </tr>
                 </tbody>
+
             </table>
+            <div class="mt-4">
+                {{ $data->links() }}
+            </div>
         </div>
 
         <!-- Thêm khoảng cách giữa hai bảng -->
@@ -96,7 +100,9 @@ Trang chủ
                     </tr>
                     @endforeach
                 </tbody>
+
             </table>
+
         </div>
 
 
@@ -146,6 +152,9 @@ Trang chủ
                     @endforeach
                 </tbody>
             </table>
+            <div class="mt-4">
+                {{ $dataTotals->links() }}
+            </div>
         </div>
         @endif
     </div>

@@ -17,12 +17,11 @@ use Maatwebsite\Excel\Facades\Excel;
 class UserController extends Controller
 {
     public function index()
-    {
+{
+    $data = User::with('department')->paginate(4); // Paginate with 10 items per page
+    return view('admin.user.index', ['data' => $data]);
+}
 
-        $data = User::with('department')->get();
-
-        return view('admin.user.index', ['data' => $data]);
-    }
 
     public function store(Request $request)
     {

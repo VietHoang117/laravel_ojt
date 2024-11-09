@@ -11,7 +11,7 @@ Tài Khoản
         <button type="submit" class="btn btn-primary">Import Users</button>
         <a href="{{ route('export.users') }}" class="btn btn-primary">Export Users</a>
     </form>
-    
+
 
     <div class="row">
         <div class="col-md-6 text-left">
@@ -62,6 +62,11 @@ Tài Khoản
                     @endforeach
                 </tbody>
             </table>
+            <div class="card-footer clearfix">
+                {{ $data->links() }}
+                <!-- This will display pagination links -->
+            </div>
+
         </div>
     </div>
 </div>

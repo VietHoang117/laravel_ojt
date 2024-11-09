@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\PayrollController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,10 +38,8 @@ Route::group(['middleware' => 'Auth'], function () {
             Route::post('/edit/{id}', [UserController::class, 'saveEdit']);
             Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete');
         });
-
         Route::post('/import-users', [UserController::class, 'importUsers'])->name('import.users');
         Route::get('/export-users', [UserController::class, 'exportUsers'])->name('export.users');
-
     });
 
     Route::group(['middleware' => ['permission:view_department|create_department|edit_department|delete_department']], function () {
@@ -55,12 +54,22 @@ Route::group(['middleware' => 'Auth'], function () {
     });
 });
 
-
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get("/view",[UserController::class,"view"]);
-
 Route::get("/export",[UserController::class,"export"]);
 
+
+
+Route::group(['middleware' => ['permission:view_payroll|create_payroll|edit_payroll|delete_payroll']], function () {
+        Route::group(['prefix' => 'admin/payroll', 'as' => 'payrolls.'], function () {
+        Route::get('/', [PayrollController::class, 'index'])->name('index');
+        Route::get('/store', [PayrollController::class, 'store'])->name('store');
+        Route::post('/save', [PayrollController::class, 'save'])->name('save');
+        Route::get('/edit/{id}', [PayrollController::class, 'edit'])->name('edit');
+        Route::post('/edit/{id}', [PayrollController::class, 'saveEdit']);
+        Route::get('/delete/{id}', [PayrollController::class, 'delete'])->name('delete');
+    });
+});
