@@ -34,9 +34,7 @@ Tài Khoản
                 <tbody>
                     @foreach($data as $r)
                     <tr>
-                        <!-- <td>
-                                <img src="{{url('/')}}/storage/{{ $r->image}}" width="100px">
-                            </td> -->
+                        
                         <td>
                             {{ $r->name }}
                         </td>

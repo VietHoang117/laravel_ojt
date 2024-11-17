@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Payroll extends Model
 {
     protected $fillable = [
+        'user_id',
+        'level_name',
         'valid_workdays',
         'invalid_workdays',
         'month',
@@ -20,5 +22,9 @@ class Payroll extends Model
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function salarylevel() {
+        return $this->belongsTo(SalaryLevel::class, 'level_name');
     }
 }

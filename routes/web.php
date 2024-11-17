@@ -5,6 +5,7 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\SalaryLevelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,33 @@ Route::group(['middleware' => 'Auth'], function () {
             Route::get('/delete/{id}', [DepartmentController::class, 'delete'])->name('delete');
         });
     });
+
+    Route::group(['middleware' => ['permission:view_payroll|create_payroll|edit_payroll|delete_payroll']], function () {
+        Route::group(['prefix' => 'admin/payroll', 'as' => 'payrolls.'], function () {
+            Route::get('/', [PayrollController::class, 'index'])->name('index');
+            Route::get('/store', [PayrollController::class, 'store'])->name('store');
+            Route::post('/save', [PayrollController::class, 'save'])->name('save');
+            Route::get('/edit/{id}', [PayrollController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [PayrollController::class, 'saveEdit']);
+            Route::get('/delete/{id}', [PayrollController::class, 'delete'])->name('delete');
+    });
+    });
+
+
+    Route::group(['middleware' => ['permission:view_salarylevels|create_salarylevels|edit_salarylevels|delete_salarylevels']], function () {
+        Route::group(['prefix' => 'admin/salary-level', 'as' => 'salarylevels.'], function () {
+            Route::get('/', [SalaryLevelController::class, 'index'])->name('index');
+            Route::get('/store', [SalaryLevelController::class, 'create'])->name('store');
+            Route::post('/save', [SalaryLevelController::class, 'save'])->name('save');
+            Route::get('/edit/{id}', [SalaryLevelController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [SalaryLevelController::class, 'saveEdit'])->name('save.edit');
+            Route::get('/delete/{id}', [SalaryLevelController::class, 'delete'])->name('delete');
+        });
+    });
+
+    Route::get('/api/salary-level/{id}', [SalaryLevelController::class, 'getSalaryLevel'])->name('api.salary-level');
+
+
 });
 
 Route::get('/', function () {
@@ -60,16 +88,3 @@ Route::get('/', function () {
 
 Route::get("/view",[UserController::class,"view"]);
 Route::get("/export",[UserController::class,"export"]);
-
-
-
-Route::group(['middleware' => ['permission:view_payroll|create_payroll|edit_payroll|delete_payroll']], function () {
-        Route::group(['prefix' => 'admin/payroll', 'as' => 'payrolls.'], function () {
-        Route::get('/', [PayrollController::class, 'index'])->name('index');
-        Route::get('/store', [PayrollController::class, 'store'])->name('store');
-        Route::post('/save', [PayrollController::class, 'save'])->name('save');
-        Route::get('/edit/{id}', [PayrollController::class, 'edit'])->name('edit');
-        Route::post('/edit/{id}', [PayrollController::class, 'saveEdit']);
-        Route::get('/delete/{id}', [PayrollController::class, 'delete'])->name('delete');
-    });
-});

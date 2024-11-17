@@ -22,7 +22,7 @@ return new class extends Migration
                 $table->string('processed_by');
                 $table->timestamp('processed_at');
                 $table->string('updated_by')->nullable();
-                $table->timestamp('updated_at')->nullable();
+                $table->timestamps();
             });
         
     }

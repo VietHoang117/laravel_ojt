@@ -70,6 +70,17 @@
                         </li>
 
                         <li class="nav-item">
+                            @if(App\Helpers\PermissionHelper::can('view_salarylevel'))
+                            <a href="{{ route('salarylevels.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Bậc Lương
+                                </p>
+                            </a>
+                            @endif
+                        </li>
+
+                        <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_payroll'))
                             <a href="{{ route('payrolls.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
@@ -114,7 +125,7 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+            <strong> &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 3.2.0

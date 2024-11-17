@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+use App\Enums\DepartmentStatusEnum;
 
 class PayrollController extends Controller
 {
@@ -15,36 +17,142 @@ class PayrollController extends Controller
 
         return view('admin.payroll.index', ['data' => $data]);
     }
-    public function calculateSalary(User $user, $month, $baseMonthlySalary) {
-        // Truy xuất dữ liệu bảng lương của người dùng trong tháng cụ thể
-        $payroll = Payroll::whereHas('users', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->where('month', $month)->first();
+
+    public function store(Request $request)
+{
+    $users = User::select('id', 'name')->get(); // Fetch users with 'id' and 'name' fields
+    return view('admin.payroll.create', ['users' => $users]);
+}
+
+
+    public function save(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'user_id'=>'required',
+        'valid_workdays' => 'required|integer|min:0',
+        'invalid_workdays' => 'required|integer|min:0',
+        'month' => 'required|date_format:Y-m',
+        'salary_received' => 'required|numeric|min:0',
+        'processed_by' => 'required|integer',
+        
+    ]);
+
+    if ($validator->fails()) {
+        return back()->withErrors($validator)
+                    ->withInput();
+    }
+
+    $inputs = $request->only([
+        'user_id',
+        'valid_workdays',
+        'invalid_workdays',
+        'month',
+        'salary_received',
+        'processed_by',  // processed_by from the form
+        
+    ]);
     
-        if (!$payroll) {
-            return response()->json(['error' => 'Không tìm thấy dữ liệu bảng lương cho người dùng và tháng được chỉ định.'], 404);
-        }
+
+    $payroll = Payroll::create($inputs);
+
+    return redirect()->route('payrolls.index');
+}
+
+public function edit($id)
+{
+    $data = Payroll::query()->findOrFail($id);
+
+    return view('admin.payroll.update', [
+        'data' => $data,
+        'users' => User::select('id', 'name')->get() // Assuming 'User' model has 'id' and 'name' fields.
+    ]);
+}
+
+public function saveEdit(Request $request, int $id)
+{
+    // Define validation rules for payroll form fields
+    $validator = Validator::make($request->all(), [
+        'valid_workdays' => 'required|integer',
+        'invalid_workdays' => 'required|integer',
+        'month' => 'required|string', // Month as a string, e.g., "2024-10"
+        'salary_received' => 'required|numeric',
+        'updated_by' => 'required', // Ensure selected user exists
+        
+    ]);
+
+    // If validation fails, return back with errors
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput();
+    }
+
+    // Collect inputs
+    $inputs = $request->only([
+        'valid_workdays',
+        'invalid_workdays',
+        'month',
+        'salary_received',
+        'updated_by',
+        
+    ]);
+
+    // Set status based on checkbox
+    $inputs['status'] = $request->has('status') ? DepartmentStatusEnum::ACTIVATED : DepartmentStatusEnum::DEACTIVATED;
+
+    // Find and update payroll record
+    $payroll = Payroll::query()->findOrFail($id);
+    $payroll->fill($inputs)->update();
+
+    // Redirect to payrolls index page after successful update
+    return redirect()->route('payrolls.index');
+}
+
+
+public function calculateSalary(User $user, $validWorkdays)
+{
+    $salaryLevel = $user->salaryLevel; // Lấy bậc lương của nhân viên
+    if (!$salaryLevel) {
+        return 0; // Nếu không có bậc lương, trả về 0 hoặc báo lỗi
+    }
+
+    // Tính lương
+    $dailySalary = $validWorkdays * $salaryLevel->daily_rate; // Lương theo ngày
+    $monthlySalary = $salaryLevel->monthly_rate; // Lương cố định theo tháng
+
+    // Chọn cách tính phù hợp (ở đây ưu tiên theo ngày)
+    return $dailySalary > 0 ? $dailySalary : $monthlySalary;
+}
+
+public function storePayroll()
+{
+    $users = User::with('salaryLevel')->get(); // Lấy danh sách nhân viên và bậc lương
+    $month = now()->format('Y-m'); // Lấy tháng hiện tại
     
-        // Tính lương dựa trên ngày làm việc hợp lệ và không hợp lệ
-        $totalWorkdays = $payroll->valid_workdays + $payroll->invalid_workdays;
-        if ($totalWorkdays == 0) {
-            return response()->json(['error' => 'Tổng số ngày làm việc không thể bằng không.'], 400);
-        }
-    
-        $validPortion = ($payroll->valid_workdays / $totalWorkdays) * $baseMonthlySalary;
-        $invalidPortion = ($payroll->invalid_workdays / $totalWorkdays) * ($baseMonthlySalary * 0.5);
-        $salaryReceived = $validPortion + $invalidPortion;
-    
-        // Cập nhật bảng lương với mức lương đã tính toán
-        $payroll->salary_received = $salaryReceived;
-        $payroll->processed_by = auth()->user()->name; //giả sử một quản trị viên được xác thực xử lý nó
-        $payroll->processed_at = now();
-        $payroll->save();
-    
-        return response()->json([
-            'message' => 'Đã tính lương thành công.',
-            'salary_received' => $salaryReceived
+    foreach ($users as $user) {
+        $validWorkdays = $user->attendances()->whereMonth('date', now()->month)->count(); // Đếm ngày công hợp lệ
+        $invalidWorkdays = 0; // Giả định chưa có logic xác định ngày không hợp lệ
+
+        $salary = $this->calculateSalary($user, $validWorkdays); // Gọi hàm tính lương
+
+        // Lưu vào bảng payrolls
+        Payroll::create([
+            'user_id' => $user->id,
+            'valid_workdays' => $validWorkdays,
+            'invalid_workdays' => $invalidWorkdays,
+            'month' => $month,
+            'salary_received' => $salary,
+            
         ]);
     }
+
+    return redirect()->route('payrolls.index')->with('success', 'Bảng lương đã được tạo thành công!');
+}
+
+
+
     
+    public function delete($id) {
+        $data = Payroll::query()->findOrFail($id);
+        $data->delete();
+        return back()->with('success', 'Xóa thành công!');
+    }
 }

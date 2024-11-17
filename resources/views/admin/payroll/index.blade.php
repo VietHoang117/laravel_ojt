@@ -17,7 +17,7 @@ Bảng Lương
                     <tr>
                         <th>STT</th>
                         <th>Tên Nhân Viên</th>
-                        <th>Email</th>
+                        <th>Bậc Lương</th>
                         <th>Phòng Ban</th>
                         <th>Tháng</th>
                         <th>Số Ngày Công Hợp Lệ</th>
@@ -54,8 +54,4 @@ Bảng Lương
 </div>
 @endsection
 
-<script>
-function confirmDelete() {
-    return confirm("Bạn có chắc chắn muốn xóa bản ghi này?");
-}
-</script>
+

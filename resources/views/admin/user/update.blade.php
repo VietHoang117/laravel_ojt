@@ -80,6 +80,8 @@ Tạo mới
 
                     </div>
                     <div class="card-footer">
+                        <button type="button" class="btn btn-primary" onclick="window.history.back()">Quay Lại</button>
+
                         <button type="submit" class="btn btn-primary">Lưu</button>
                     </div>
                 </form>

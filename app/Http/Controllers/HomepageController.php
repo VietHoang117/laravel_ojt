@@ -25,7 +25,7 @@ class HomepageController extends Controller
         $data = Attendance::with(['user', 'user.department'])
             ->where('user_id', $auth->id)
             ->orderByDesc('date')
-            ->paginate(4) // Here we set pagination to 10 per page
+            ->paginate(4)
             ->through(function ($attendance) use ($start_time, $end_time) {
                 return $this->processAttendanceData($attendance, $start_time, $end_time);
             });
@@ -46,7 +46,7 @@ class HomepageController extends Controller
 
         $dataTotals = $dataTotalsQuery
             ->orderByDesc('date')
-            ->paginate(4) // Pagination for total data as well
+            ->paginate(4)
             ->through(function ($attendance) use ($start_time, $end_time) {
                 return $this->processAttendanceData($attendance, $start_time, $end_time);
             });
@@ -68,6 +68,71 @@ class HomepageController extends Controller
             'checkIn' => !$checkIn,
             'checkOut' => !$checkOut,
         ]);
+
+    }
+
+    public function checkIn()
+    {
+        $auth = Auth::user();
+        $now = now();
+
+        // Check if user already checked in today
+        $check = Attendance::where('user_id', $auth->id)
+            ->whereDate('date', $now)
+            ->whereNotNull('check_in')
+            ->exists();
+
+        if (!$check) {
+            // Create a new attendance record with check-in time
+            Attendance::create([
+                'user_id' => $auth->id,
+                'check_in' => $now,
+                'date' => $now->toDateString(),
+            ]);
+
+            return back()->with([
+                'message' => 'Check In thành công'
+            ]);
+        } else {
+            return back()->with([
+                'error' => 'Bạn đã check in ngày hôm nay.'
+            ]);
+        }
+    }
+
+    public function checkOut()
+    {
+        $auth = Auth::user();
+        $now = now();
+
+        // Find today's attendance record for the user
+        $attendance = Attendance::where('user_id', $auth->id)
+            ->whereDate('date', $now)
+            ->first();
+
+
+
+        // Check if a check-in exists and check-out has not been recorded yet
+        if ($attendance && is_null($attendance->check_out)) {
+            // Update the attendance record with check-out time
+            // tính lấy check out - checkin nếu số giờ nhỏ hơn 6 thì update status không có hop le
+
+            $attendance->update([
+                'check_out' => $now,
+            ]);
+
+            return back()->with([
+                'message' => 'Check-out thành công'
+            ]);
+        } elseif ($attendance && !is_null($attendance->check_out)) {
+            return back()->with([
+                'error' => 'Bạn đã check out ngày hôm nay.'
+            ]);
+        } else {
+            return back()->with([
+                'error' => 'Bạn cần Check in trước khi Check Out.'
+            ]);
+        }
     }
 
     private function processAttendanceData($attendance, $start_time, $end_time)
@@ -92,4 +157,3 @@ class HomepageController extends Controller
         ];
     }
 }
-
