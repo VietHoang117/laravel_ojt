@@ -13,7 +13,7 @@ class SalaryLevelController extends Controller
     // Hiển thị danh sách các bậc lương
     public function index()
     {
-        $data = SalaryLevel::all();
+        $data = SalaryLevel::with('user')->paginate(10);
         return view('admin.salary-level.index', ['data' => $data]);
 
 

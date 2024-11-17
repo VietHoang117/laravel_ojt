@@ -16,32 +16,40 @@ Bậc Lương
                 <thead>
                     <tr>
                         <th>STT</th>
+                        <th>Tên nhân viên</th>
                         <th>Bậc Lương</th>
                         <th>Lương Ngày</th>
                         <th>Lương Tháng</th>
                         <th>Hành Động</th>
-                        
+
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($data as $key=>$value)
-                    
-                    <tr>
-                        <td>{{$value->id}}</td>
-                        <td>{{ $value->level_name }}</td>
-                        <td>{{ $value->daily_rate }}</td>
-                        <td>{{ $value->monthly_rate }}</td>
-                        <td>
-                            <a href="{{ route('salarylevels.edit', $value->id) }}" class="btn btn-success">Sửa</a>
-                            <a href="{{ route('salarylevels.delete', $value->id) }}" class="btn btn-danger" onclick="return confirmDelete()">
-                                Xóa
-                            </a>
-                        </td>
-                    </tr>
+                    @foreach($data as $key => $value)
+
+                        <tr>
+                            <td>{{$value->id}}</td>
+                            <td>
+                                {{ $value->user->name }}
+                            </td>
+                            <td>{{ $value->level_name }}</td>
+                            <td>{{ $value->daily_rate }}</td>
+                            <td>{{ $value->monthly_rate }}</td>
+                            <td>
+                                <a href="{{ route('salarylevels.edit', $value->id) }}" class="btn btn-success">Sửa</a>
+                                <a href="{{ route('salarylevels.delete', $value->id) }}" class="btn btn-danger"
+                                    onclick="return confirmDelete()">
+                                    Xóa
+                                </a>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
-            
+            <div class="mt-4">
+                {{ $data->links() }}
+            </div>
+
         </div>
     </div>
 </div>

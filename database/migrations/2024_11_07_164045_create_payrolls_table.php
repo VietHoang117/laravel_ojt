@@ -15,13 +15,12 @@ return new class extends Migration
             Schema::create('payrolls', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('user_id');
-                $table->integer('valid_workdays');
-                $table->integer('invalid_workdays');
+                $table->integer('valid_workdays')->comment('Ngày công hợp lệ');
+                $table->integer('invalid_workdays')->comment('Ngày không hợp lệ');
                 $table->string('month'); // E.g., "2024-11"
-                $table->decimal('salary_received', 10, 2);
-                $table->string('processed_by');
-                $table->timestamp('processed_at');
-                $table->string('updated_by')->nullable();
+                $table->decimal('salary_received', 10)->comment('Lương được nhận');
+                $table->enum('type', ['month', 'day'])->comment('theo tháng, theo ngày');
+                $table->integer('processed_by');
                 $table->timestamps();
             });
         

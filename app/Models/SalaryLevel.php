@@ -15,11 +15,9 @@ class SalaryLevel extends Model
         'monthly_rate'
     ];
 
-    
-
-    public function salaryLevel()
+    public function user()
     {
-        return $this->belongsTo(SalaryLevel::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 }

@@ -56,8 +56,8 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class, 'user_id');
     }
 
-    public function salarylevel() {
-        return $this->belongsTo(SalaryLevel::class);
+    public function salaryLevel() {
+        return $this->hasOne(SalaryLevel::class, 'user_id')->latest('id');
     }
 
     /**

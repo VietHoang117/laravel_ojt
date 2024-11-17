@@ -83,16 +83,25 @@ class HomepageController extends Controller
             ->exists();
 
         if (!$check) {
+        
             // Create a new attendance record with check-in time
-            Attendance::create([
+            //neu gio checkin lớn hơn 17h thì update status => vắng mặt
+            $data = [
                 'user_id' => $auth->id,
                 'check_in' => $now,
                 'date' => $now->toDateString(),
-            ]);
+            ];
+
+            // if (check) {
+            //     $data['status'] = 'Vắng măt';  
+            // }
+           
+            Attendance::create( $data);
 
             return back()->with([
                 'message' => 'Check In thành công'
             ]);
+            
         } else {
             return back()->with([
                 'error' => 'Bạn đã check in ngày hôm nay.'
@@ -140,7 +149,11 @@ class HomepageController extends Controller
         $checkInTime = Carbon::parse($attendance->check_in);
         $checkOutTime = Carbon::parse($attendance->check_out);
         $lateMinutes = $start_time->diffInMinutes($checkInTime, false);
+
+
         $lateTime = $lateMinutes > 0 ? sprintf('%02d:%02d', floor($lateMinutes / 60), $lateMinutes % 60) : '00:00';
+        
+        
         $overtimeMinutes = $checkOutTime->greaterThan($end_time) ? $checkOutTime->diffInMinutes($end_time) : 0;
         $overtime = $overtimeMinutes > 0 ? sprintf('%02d:%02d', floor($overtimeMinutes / 60), $overtimeMinutes % 60) : '00:00';
 
