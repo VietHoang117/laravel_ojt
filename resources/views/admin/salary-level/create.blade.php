@@ -14,10 +14,12 @@
 
         <form action="{{ route('salarylevels.save') }}" method="POST">
             @csrf
-            <div class="form-group">
-                <label class="form-label">Người Được Xử Lí</label>
-                <select class="form-select" name="user_id">
-                    <option value="">--- Chọn người được xử lí ---</option>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Chọn người được xử lí</label>
+                </div>
+                <select class="custom-select" name="user_id" id="inputGroupSelect01">
+                    <option selected>Choose...</option>
                     @foreach ($users as $user)
                         <option value="{{ $user->id }}">
                             {{ $user->name }}
@@ -25,6 +27,7 @@
                     @endforeach
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="level_name">Tên Bậc Lương:</label>
                 <input type="text" name="level_name" class="form-control" required>

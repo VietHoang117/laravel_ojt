@@ -22,10 +22,13 @@
                     <form action="{{ route('payrolls.save') }}" method="post">
                         @csrf
                         <div class="card-body">
-                            <div class="form-group">
-                                <label class="form-label">Người Được Xử Lí</label>
-                                <select class="form-select" name="user_id">
-                                    <option value="">--- Chọn người được xử lí ---</option>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Chọn người được xử lí</label>
+                                </div>
+                                <select class="custom-select" name="user_id" id="inputGroupSelect01">
+                                    <option selected>Choose...</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">
                                             {{ $user->name }}
@@ -33,7 +36,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            
+
 
                             <div class="form-group">
                                 <label for="valid_workdays">Số Ngày Công Hợp Lệ</label>
@@ -59,10 +62,12 @@
                                     readonly>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Người Xử Lí</label>
-                                <select class="form-select" name="processed_by">
-                                    <option value="">--- Chọn người xử lí ---</option>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Chọn người xử lí</label>
+                                </div>
+                                <select class="custom-select" name="user_id" id="inputGroupSelect01">
+                                    <option selected>Choose...</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">
                                             {{ $user->name }}
