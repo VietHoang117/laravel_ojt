@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\User;
 
 class updatePayrolls extends Command
 {
@@ -26,11 +27,15 @@ class updatePayrolls extends Command
      */
     public function handle()
     {
-        $users = User::select('id', 'name')->whereHas('roles',function($query) {
-
+        $users = User::query()
+        ->whereHas('roles',function($query) {
             return $query->where('is_system_role', '!=', true);
-        })->get();
-
+        })
+        ->with('attendances', function ($query) {
+            $query->where('status', 'presert');
+        })
+        ->get();
+        dd($users);
         foreach($users as $user){
             
         }

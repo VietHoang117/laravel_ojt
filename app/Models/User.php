@@ -25,7 +25,7 @@ class User extends Authenticatable
         'position',
         'department_id'
     ];
-
+  
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
@@ -48,6 +48,18 @@ class User extends Authenticatable
         })->exists();
     }
 
+    public function payrolls() {
+        return $this->belongsToMany(Payroll::class, 'payroll_user');
+    }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class, 'user_id');
+    }
+
+    public function salarylevel() {
+        return $this->belongsTo(SalaryLevel::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -68,8 +80,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function payrolls() {
-        return $this->belongsToMany(Payroll::class, 'payroll_user');
-    }
+    
 
 }

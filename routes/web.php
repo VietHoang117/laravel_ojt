@@ -7,6 +7,8 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\SalaryLevelController;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +83,72 @@ Route::group(['middleware' => 'Auth'], function () {
 
 
 });
+Route::get('/b', function () {
+
+    // Truy vấn lấy tất cả người dùng với điều kiện
+    $users = User::query()
+        ->whereHas('roles', function ($query) {
+            return $query->where('is_system_role', '!=', true);
+        })
+        ->with('attendances', function ($query) {
+            $query->where('status', 'present');
+        })
+        ->with('salarylevel')
+        ->get();
+
+    $year = 2024;
+    $month = 11;
+
+
+
+    
+    
+    // Tính toán ngày bắt đầu và ngày kết thúc của tháng
+    $startDate1 = Carbon::create($year, $month, 1)->startOfMonth();
+    $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+
+    $endDate = Carbon::create($year, $month, 1)->endOfMonth();
+
+
+    $workingDays = 0;
+
+    // Lặp qua từng ngày trong tháng
+    while ($startDate->lte($endDate)) {
+        // Kiểm tra nếu ngày không phải thứ Bảy (6) hoặc Chủ nhật (7)
+        if (!$startDate->isWeekend()) {
+            $workingDays++;
+        }
+
+        // Tiến đến ngày tiếp theo
+        $startDate->addDay();
+    }
+
+    // dd($workingDays);
+
+    // Lặp qua tất cả người dùng
+    foreach ($users as $user) {
+        // Đếm số ngày làm việc trong tháng
+        $conghople = $user->attendances->whereBetween('check_in', [$startDate1, $endDate])->count();
+        // dd($conghople);
+        // Tính lương tháng (ví dụ theo công thức)
+        dd($user);
+        
+        if ($user->salarylevel) {
+            $luongthang = ($conghople / $workingDays) * $user->salarylevel->monthly_rate;
+
+
+        }
+        // Có thể thêm logic tính lương hoặc các phép toán khác ở đây
+        // echo $luongthang;  // Debug nếu cần
+
+        // Debug với dd() nếu cần kiểm tra
+        // dd($user->attendances, $conghople, $luongthang);
+    }
+
+});
+
+
+
 
 Route::get('/', function () {
     return view('welcome');
