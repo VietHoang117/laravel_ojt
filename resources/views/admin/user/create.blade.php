@@ -32,7 +32,7 @@ Tạo mới
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Mật Khẩu</label>
-                            <input type="text" class="form-control" name="password" placeholder="Enter ">
+                            <input type="password" class="form-control" name="password" placeholder="Enter ">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Số điện thoại</label>
@@ -49,8 +49,21 @@ Tạo mới
                                 @endforeach
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Vai trò</label>
+                            <select class="form-select" name="role_id">
+                                <option value="">--- Chọn vai trò ---</option>
+                                @foreach($roles as $role)
+                                <option value="{{ $role->id }}">
+                                    {{ $role->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-primary" onclick="window.history.back()">Quay Lại</button>
+
+                            <button type="submit" class="btn btn-primary">Lưu</button>
                         </div>
                 </form>
             </div>

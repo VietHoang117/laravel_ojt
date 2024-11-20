@@ -17,24 +17,9 @@ td.details-control {
             <h4>Phòng Ban</h4>
         </div>
         <div class="col-md-6 text-right">
-
-            <a href="{{route('departments.store')}}" class="col-md-2 btn btn-block btn-primary float-right">Thêm
-                mới</a>
-
+            <a href="{{route('departments.store')}}" class="col-md-2 btn btn-block btn-primary float-right">Thêm mới</a>
         </div>
         <div class="card-body">
-
-            <table id="example123" class="display" style="width:100%">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Tên</th>
-                        <th>Chức vụ</th>
-                        <th>Phòng ban</th>
-                    </tr>
-                </thead>
-                
-            </table>
 
             <table id="example" class="table table-bordered table-hover">
                 <thead>
@@ -48,33 +33,30 @@ td.details-control {
                 <tbody>
                     @foreach($data as $r)
                     <tr>
-                        <td>
-                            {{ $r->room_name }}
-                        </td>
+                        <td>{{ $r->room_name }}</td>
                         <td>
                             <p>
                                 @foreach ($r->departments as $department)
-                                {{ $department->room_name }}
+                                    {{ $department->room_name }}
                                 @endforeach
                             </p>
                         </td>
-                        <td>
-                            {{ $r-> status  }}
-                        </td>
+                        <td>{{ $r->status === 'activated' ? 'Đã kích hoạt' : 'Chưa kích hoạt' }}</td>
                         <td>
                             <a href="{{ route('departments.edit', ['id' => $r->id])}}" class="btn btn-success">Sửa</a>
-                            <a href="{{ route('departments.delete', ['id' => $r->id]) }}" class="btn btn-danger"
-                                onclick="return confirmDelete()">
-                                Xóa
-                            </a>
+                            <a href="{{ route('departments.delete', ['id' => $r->id]) }}" class="btn btn-danger" onclick="return confirmDelete()">Xóa</a>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
+            <div class="card-footer clearfix">
+                {{ $data->links() }} <!-- Automatically generated pagination links -->
+            </div>
         </div>
     </div>
 </div>
+
 <script>
 $(document).ready(function() {
     var table = $('#example123').DataTable({
@@ -87,11 +69,9 @@ $(document).ready(function() {
         var row = table.row(tr);
 
         if (row.child.isShown()) {
-            // Nếu hàng con đang hiển thị, ẩn nó
             row.child.hide();
             tr.find('td.details-control').text('+');
         } else {
-            // Nếu hàng con đang ẩn, hiển thị nó
             row.child(tr.data('child')).show();
             tr.find('td.details-control').text('-');
         }

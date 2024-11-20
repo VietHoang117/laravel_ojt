@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Jobs\SendMailJob;
 use Carbon\Carbon;
 use App\Models\ReminderSchedule;
+
 class updatePayrolls extends Command
 {
 

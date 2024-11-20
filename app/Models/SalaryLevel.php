@@ -4,18 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
-class Attendance extends Model
+class SalaryLevel extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'user_id',
-        'check_in',
-        'check_out',
-        'date',
-        'status'
+        'level_name',
+        'daily_rate',
+        'monthly_rate'
     ];
 
     public function user()
@@ -23,8 +20,4 @@ class Attendance extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function scopeOwnedByUserGroup($query)
-    {
-        $user = Auth::user();
-    }
 }

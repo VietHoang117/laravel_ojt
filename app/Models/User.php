@@ -25,7 +25,7 @@ class User extends Authenticatable
         'position',
         'department_id'
     ];
-
+  
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
@@ -43,9 +43,21 @@ class User extends Authenticatable
         }
 
         // Kiểm tra xem người dùng có quyền cụ thể không
-        return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
+        return $this->roles()->whereHas('permissions', callback: function ($query) use ($permission) {
             $query->where('name', $permission);
         })->exists();
+    }
+
+    public function payrolls() {
+        return $this->belongsToMany(Payroll::class, 'payroll_user');
+    }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class, 'user_id');
+    }
+
+    public function salaryLevel() {
+        return $this->hasOne(SalaryLevel::class, 'user_id')->latest('id');
     }
 
     /**
@@ -67,4 +79,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    
+
 }

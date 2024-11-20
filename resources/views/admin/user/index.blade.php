@@ -4,6 +4,15 @@ Tài Khoản
 @stop
 @section('content')
 <div class="container-fluid">
+
+    <form action="{{ route('import.users') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="file" name="file">
+        <button type="submit" class="btn btn-primary">Import Users</button>
+        <a href="{{ route('export.users') }}" class="btn btn-primary">Export Users</a>
+    </form>
+
+
     <div class="row">
         <div class="col-md-6 text-left">
             <h4>Danh Sách Tài Khoản</h4>
@@ -17,6 +26,7 @@ Tài Khoản
                     <tr>
                         <th>Tên </th>
                         <th>Email</th>
+                        <th>Phòng Ban</th>
                         <th>Thời gian chấm công </th>
                         <th>Hành động</th>
                     </tr>
@@ -24,14 +34,15 @@ Tài Khoản
                 <tbody>
                     @foreach($data as $r)
                     <tr>
-                        <!-- <td>
-                                <img src="{{url('/')}}/storage/{{ $r->image}}" width="100px">
-                            </td> -->
+                        
                         <td>
                             {{ $r->name }}
                         </td>
                         <td>
                             {{ $r->email }}
+                        </td>
+                        <td>
+                            {{$r->department ? $r->department->room_name:''}}
                         </td>
                         <td>
                             {{$r->time}}
@@ -42,13 +53,18 @@ Tài Khoản
                                 onclick="return confirmDelete()">
                                 Xóa
                             </a>
-                            <a href="{{ route('users.edit', ['id' => $r->id])}}" class="btn btn-success">View</a>
+
 
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
+            <div class="card-footer clearfix">
+                {{ $data->links() }}
+                <!-- This will display pagination links -->
+            </div>
+
         </div>
     </div>
 </div>

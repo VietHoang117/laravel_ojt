@@ -26,7 +26,8 @@ class RolesSeeder extends Seeder
             'view_department',
             'create_department',
             'edit_department',
-            'delete_department'
+            'delete_department',
+            'view_profile'
         ];
 
         $permissionIds = [];
@@ -38,7 +39,7 @@ class RolesSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => 'admin', 'is_system_role' => true]);
         $memberRole = Role::firstOrCreate(['name' => 'member']);
 
-        $memberPermissions = ['view_dashboard', 'check_in', 'check_out'];
+        $memberPermissions = ['view_dashboard', 'check_in', 'check_out', 'view_profile'];
 
         $memberRole->permissions()->sync(array_map(fn($name) => $permissionIds[$name], $memberPermissions));
 

@@ -9,19 +9,24 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Department;
+use App\Models\Role;
+
+use App\Imports\UsersImport;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class UserController extends Controller
 {
     public function index()
-    {
+{
+    $data = User::with('department')->paginate(6); // Paginate with 10 items per page
+    return view('admin.user.index', ['data' => $data]);
+}
 
-        $data = User::all();
-
-        return view('admin.user.index', ['data' => $data]);
-    }
 
     public function store(Request $request)
     {
-        return view('admin.user.create', ['departments' =>  Department::select('id', 'room_name')->get()]);
+        return view('admin.user.create', ['departments' =>  Department::select('id', 'room_name')->get(), 'roles' => Role::select('id', 'name')->get()]);
     }
 
     public function save(Request $request)
@@ -31,6 +36,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' =>'required',
             'phone_number'=>'required',
+            'role_id' => 'required'
             // 'position'=>'required',
         ]);
 
@@ -44,18 +50,20 @@ class UserController extends Controller
             'email',
             'password',
             'phone_number',
-            'department_id'
+            'department_id',
+            'role_id'
         ]);
 
         if (empty($inputs['department_id'])) {
             $inputs['department_id'] = 0;
         }
-        // dd($inputs);
 
         $inputs['password'] = Hash::make($inputs['password']);
         $inputs['position'] = md5('hoang');
-       
-        User::create($inputs);
+
+        $user = User::create($inputs);
+
+        $user->roles()->sync([$inputs['role_id']]);
 
         return redirect()->route('users.users');
 
@@ -65,7 +73,7 @@ class UserController extends Controller
     {
         $data = User::query()->findOrFail($id);
 
-        return view('admin.user.update', ['data' => $data]);
+        return view('admin.user.update',  [ 'data'=>$data, 'departments' =>  Department::select('id', 'room_name')->get(), 'roles' => Role::select('id', 'name')->get()]);
     }
 
     public function saveEdit(Request $request, int $id)
@@ -73,7 +81,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email',
-            'password' =>'nullable|min:8|confirmed',
+            'password' =>'nullable|min:8',
             'phone_number'=>'required',
             // 'position'=>'required',
         ]);
@@ -88,10 +96,19 @@ class UserController extends Controller
             'email',
             'password',
             'phone_number',
-            'department_id'
+            'department_id',
         ]);
 
-        $inputs['password'] = Hash::make($inputs['password']);
+        if ($request->filled('password')) {
+            $inputs['password'] = Hash::make($inputs['password']);
+        }
+        if(empty($inputs['password'])) {
+            unset($inputs['password']);
+        };
+        if(empty($inputs['department_id'])) {
+            $inputs['department_id'] = 0;
+        };
+
         $inputs['position'] = md5('hoang');
         $data = User::query()
         ->findOrFail($id);
@@ -100,16 +117,30 @@ class UserController extends Controller
         return redirect()->route('users.users')->with('success', 'Thông tin người dùng đã được cập nhật.');
 
 
-      
-
-        
-        
-    
     }
 
     public function delete($id) {
         $data = User::query()->findOrFail($id);
         $data->delete();
         return back()->with('success', 'Xóa thành công!');
+    }
+
+    //import-export
+    public function view(){
+        return view("dashboard");
+    }
+
+    public function importUsers(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
+        Excel::Import(new UsersImport, request()->file('file'));
+
+        return redirect()->back();
+    }
+
+    public function exportUsers(){
+        return Excel::download(new UsersExport, 'users.xlsx');
     }
 }
