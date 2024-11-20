@@ -10,6 +10,9 @@ use App\Enums\DepartmentStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+use App\Exports\PayrollExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class PayrollController extends Controller
 {
     public function index()
@@ -242,5 +245,9 @@ class PayrollController extends Controller
         $data = Payroll::query()->findOrFail($id);
         $data->delete();
         return back()->with('success', 'Xóa thành công!');
+    }
+
+    public function exportPayrolls(){
+        return Excel::download(new PayrollExport, 'payrolls.xlsx');
     }
 }

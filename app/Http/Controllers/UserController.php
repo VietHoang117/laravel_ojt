@@ -14,11 +14,12 @@ use App\Models\Role;
 use App\Imports\UsersImport;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
+
 class UserController extends Controller
 {
     public function index()
 {
-    $data = User::with('department')->paginate(10); // Paginate with 10 items per page
+    $data = User::with('department')->paginate(6); // Paginate with 10 items per page
     return view('admin.user.index', ['data' => $data]);
 }
 

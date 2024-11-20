@@ -79,6 +79,7 @@ Route::group(['middleware' => 'Auth'], function () {
             Route::post('/edit/{id}', [SalaryLevelController::class, 'saveEdit'])->name('save.edit');
             Route::get('/delete/{id}', [SalaryLevelController::class, 'delete'])->name('delete');
         });
+        Route::get('/export-payrolls', [PayrollController::class, 'exportPayrolls'])->name('export.payrolls');
     });
 
     Route::get('/api/salary-level/{id}', [SalaryLevelController::class, 'getSalaryLevel'])->name('api.salary-level');

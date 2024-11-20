@@ -46,7 +46,7 @@ class HomepageController extends Controller
 
         $dataTotals = $dataTotalsQuery
             ->orderByDesc('date')
-            ->paginate(4)
+            ->paginate(6)
             ->through(function ($attendance) use ($start_time, $end_time) {
                 return $this->processAttendanceData($attendance, $start_time, $end_time);
             });

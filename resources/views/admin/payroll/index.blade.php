@@ -4,10 +4,17 @@ Bảng Lương
 @stop
 @section('content')
 <div class="container-fluid">
+
+    
+    
+
     <div class="row">
         <div class="col-md-6 text-left">
             <h4>Quản Lý Bảng Lương Theo Tháng</h4>
+            <a href="{{ route('export.payrolls') }}" class="btn btn-primary">Export Users</a>
+
         </div>
+        
         <div class="col-md-6 text-right">
             @if(App\Helpers\PermissionHelper::can('update_payroll'))
                 <a href="{{ route('payrolls.update-wage') }}" class="col-md-3 btn btn-primary float-right">Cập nhật lương
@@ -27,6 +34,7 @@ Bảng Lương
                         <th>Số Ngày Công Không Hợp Lệ</th>
                         <th>Lương Nhận Được</th>
                         <th>Hành Động</th>
+                        
                     </tr>
                 </thead>
                 <tbody>

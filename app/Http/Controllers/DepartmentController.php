@@ -14,7 +14,7 @@ class DepartmentController extends Controller
     public function index()
     {
 
-        $data = Department::with('departments')->paginate(4);
+        $data = Department::with('departments')->paginate(6);
 
         return view('admin.department.index', ['data' => $data]);
     }
