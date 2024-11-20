@@ -5,7 +5,12 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
-
+use App\Mail\ExampleEmail;
+use Illuminate\Support\Facades\Mail;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\MailerSend;
+use Illuminate\Support\Facades\Http;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,3 +58,35 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get("/view", [UserController::class, "view"]);
+Route::get("/export", [UserController::class, "export"]);
+
+
+Route::get('/send-example-mail', function () {
+    $response = Http::withHeaders([
+        'Content-Type' => 'application/json',
+        'X-Requested-With' => 'XMLHttpRequest',
+        'Authorization' => 'Bearer mlsn.e827df1ce34e07cd5dc804fdb37231342ed232fc14ce535e01117410c2a64dc3', // Thay {your-token-here} bằng token thực tế
+    ])->post('https://api.mailersend.com/v1/email', [
+        'from' => [
+            'email' => 'smtp.mailersend.net',
+        ],
+        'to' => [
+            [
+                'email' => 'truongviethoang64@gmail.com',
+            ],
+        ],
+        'subject' => 'Hello from MailerSend!',
+        'text' => 'Greetings from the team, you got this message through MailerSend.',
+        'html' => 'Greetings from the team, you got this message through MailerSend.',
+    ]);
+    
+    // Kiểm tra kết quả phản hồi
+    if ($response->successful()) {
+        // Thành công
+        return 'Email sent successfully!';
+    } else {
+        // Xử lý lỗi
+        return $response->body();
+    }
+});
