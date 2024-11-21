@@ -7,7 +7,7 @@
         <div class="container mx-auto p-4 bg-white shadow-md mt-10">
             @if (auth()->user()->roles->first()->is_system_role != true)
                 <h1 class="text-2xl font-bold text-center text-gray-800">Bảng chấm công hàng tháng</h1>
-                
+
 
                 @if (session('message'))
                     <div class="alert alert-success">
@@ -75,6 +75,9 @@
 
                 <div class="col-md-12 text-left">
                     <h1>Danh sách chấm công</h1>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                        data-whatever="@mdo">Gửi Giải Trình</button>
+                    
                 </div>
                 <div class="card-body">
                     <table id="example2" class="table table-bordered table-hover">
@@ -141,6 +144,7 @@
                                 <th>Giờ đã làm</th>
                                 <th>Muộn Giờ</th>
                                 <th>Trạng Thái</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -156,6 +160,12 @@
                                     <td>{{ $r['total_time'] }}</td>
                                     <td>{{ $r['late'] }}</td>
                                     <td>{{ $r['status'] === 'present' ? 'Có mặt' : 'Vắng mặt' }}</td>
+                                    <td>
+                                        <a class="btn btn-success">Sửa</a>
+                                        <a class="btn btn-danger" onclick="return confirmDelete()">
+                                            Xóa
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

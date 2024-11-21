@@ -67,6 +67,7 @@ class HomepageController extends Controller
             'time' => $time,
             'checkIn' => !$checkIn,
             'checkOut' => !$checkOut,
+            
         ]);
 
     }
@@ -167,20 +168,6 @@ class HomepageController extends Controller
         ];
     }
 
-    public function submitJustification(Request $request, $id)
-    {
-    $attendance = Attendance::findOrFail($id);
-
-    if ($attendance->status === 'Không hợp lệ' && !$attendance->is_confirmed) {
-        $attendance->update([
-            'justification_reason' => $request->input('reason'),
-        ]);
-
-        return back()->with(['message' => 'Lý do giải trình đã được gửi.']);
-    }
-
-    return back()->with(['error' => 'Không thể giải trình bản ghi này.']);
-    }
 
 
 

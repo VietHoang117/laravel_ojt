@@ -13,6 +13,8 @@ use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
 use MailerSend\MailerSend;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\JustificationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,18 +88,19 @@ Route::group(['middleware' => 'Auth'], function () {
 
     Route::get('/api/salary-level/{id}', [SalaryLevelController::class, 'getSalaryLevel'])->name('api.salary-level');
     
-    //user
-    Route::post('/attendance/{id}/justify', [HomepageController::class, 'submitJustification'])
-    ->name('attendance.justify');
-
-    //admin
-    Route::middleware(['auth', 'role:admin'])->group(function () {
-        Route::get('/admin/attendance', [AdminAttendanceController::class, 'index'])
-        ->name('admin.attendance.index');
-        Route::post('/admin/attendance/{id}/confirm', [AdminAttendanceController::class, 'confirmAttendance'])
-        ->name('admin.attendance.confirm');
+    Route::group(['middleware' => ['permission:view_justifications|create_justifications|edit_justifications|delete_justifications']], function () {
+        Route::group(['prefix' => 'admin/justification', 'as' => 'justifications.'], function () {
+            Route::get('/', [JustificationController::class, 'index'])->name('index');
+            Route::get('/store', [JustificationController::class, 'create'])->name('store');
+            Route::post('/save', [JustificationController::class, 'save'])->name('save');
+            Route::get('/edit/{id}', [JustificationController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [JustificationController::class, 'saveEdit'])->name('save.edit');
+            Route::get('/delete/{id}', [JustificationController::class, 'delete'])->name('delete');
+            Route::post('/submit/{id}', [JustificationController::class, 'submit'])->name('submit');
+        });
+        Route::get('/export-payrolls', [PayrollController::class, 'exportPayrolls'])->name('export.payrolls');
     });
-
+    
 
 });
 
