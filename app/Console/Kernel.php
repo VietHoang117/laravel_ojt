@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('app:update-payrolls')->dailyAt('6:00');
+        $schedule->command('attendance:scan')->dailyAt('23:00'); // Chạy hàng ngày lúc 23h
     }
 
     /**
@@ -24,5 +25,7 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+
+    
 
 }

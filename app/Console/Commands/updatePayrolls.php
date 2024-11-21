@@ -33,6 +33,8 @@ class updatePayrolls extends Command
             ->with('user')
             ->where('is_sent', false)
             ->get();
+
+        // dd($reminders);
         foreach ($reminders as $reminder) {
             $delay = Carbon::now()->diffInSeconds(Carbon::parse($reminder->reminder_time), false);
 

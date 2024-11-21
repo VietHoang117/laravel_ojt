@@ -75,6 +75,8 @@ class HomepageController extends Controller
     {
         $auth = Auth::user();
         $now = now();
+        $start_time = now()->setTime(8, 0, 0);
+        $end_time = now()->setTime(17, 0, 0);
 
         // Check if user already checked in today
         $check = Attendance::where('user_id', $auth->id)
@@ -83,29 +85,27 @@ class HomepageController extends Controller
             ->exists();
 
         if (!$check) {
-        
-            // Create a new attendance record with check-in time
-            //neu gio checkin lớn hơn 17h thì update status => vắng mặt
             $data = [
                 'user_id' => $auth->id,
                 'check_in' => $now,
                 'date' => $now->toDateString(),
             ];
 
-            // if (check) {
-            //     $data['status'] = 'Vắng măt';  
-            // }
+            // Kiểm tra điều kiện thời gian
+        if ($now->greaterThan($end_time)) {
+            $data['status'] = 'Không hợp lệ'; // Check-in sau 17:00
+        } elseif ($now->greaterThan($start_time)) {
+            $data['status'] = 'Không hợp lệ'; // Check-in sau 08:00
+        } else {
+            $data['status'] = 'Hợp lệ'; // Check-in trước 08:00
+        }
            
             Attendance::create( $data);
 
-            return back()->with([
-                'message' => 'Check In thành công'
-            ]);
+            return back()->with(['message' => 'Check In thành công']);
             
         } else {
-            return back()->with([
-                'error' => 'Bạn đã check in ngày hôm nay.'
-            ]);
+            return back()->with(['error' => 'Bạn đã check in ngày hôm nay.']);
         }
     }
 
@@ -113,34 +113,31 @@ class HomepageController extends Controller
     {
         $auth = Auth::user();
         $now = now();
+        $end_time = now()->setTime(17, 0, 0);
 
         // Find today's attendance record for the user
         $attendance = Attendance::where('user_id', $auth->id)
             ->whereDate('date', $now)
             ->first();
-
-
-
-        // Check if a check-in exists and check-out has not been recorded yet
+        
         if ($attendance && is_null($attendance->check_out)) {
-            // Update the attendance record with check-out time
-            // tính lấy check out - checkin nếu số giờ nhỏ hơn 6 thì update status không có hop le
-
+        
             $attendance->update([
                 'check_out' => $now,
             ]);
+            // dd($attendance->check_in,$end_time);
+            if ($attendance->check_in->lessThan($end_time) && $attendance->check_out->greaterThan($end_time)) {
+                $attendance->update(['status' => 'Hợp lệ']);
+            } else {
+                $attendance->update(['status' => 'Không hợp lệ']);
+            }
 
-            return back()->with([
-                'message' => 'Check-out thành công'
-            ]);
+            return back()->with(['message' => 'Check-out thành công']);
+
         } elseif ($attendance && !is_null($attendance->check_out)) {
-            return back()->with([
-                'error' => 'Bạn đã check out ngày hôm nay.'
-            ]);
+            return back()->with(['error' => 'Bạn đã check out ngày hôm nay.']);
         } else {
-            return back()->with([
-                'error' => 'Bạn cần Check in trước khi Check Out.'
-            ]);
+            return back()->with(['error' => 'Bạn cần Check in trước khi Check Out.']);
         }
     }
 
@@ -169,4 +166,22 @@ class HomepageController extends Controller
             'status' => $attendance->status
         ];
     }
+
+    public function submitJustification(Request $request, $id)
+    {
+    $attendance = Attendance::findOrFail($id);
+
+    if ($attendance->status === 'Không hợp lệ' && !$attendance->is_confirmed) {
+        $attendance->update([
+            'justification_reason' => $request->input('reason'),
+        ]);
+
+        return back()->with(['message' => 'Lý do giải trình đã được gửi.']);
+    }
+
+    return back()->with(['error' => 'Không thể giải trình bản ghi này.']);
+    }
+
+
+
 }

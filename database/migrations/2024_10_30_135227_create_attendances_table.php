@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamp('check_in')->nullable(); // Cột check-in với kiểu timestamp
             $table->timestamp('check_out')->nullable(); // Cột check-out với kiểu timestamp
             $table->date('date');
-            $table->string('status')->default('present'); 
+            $table->string('status')->default('Không hợp lệ'); // Hợp lệ / Không hợp lệ
             $table->timestamps();
         });
     }

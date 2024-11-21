@@ -165,7 +165,7 @@ class PayrollController extends Controller
             })
             ->with([
                 'attendances' => function ($query) use ($year, $month) {
-                    $query->where('status', 'present')
+                    $query->where('status', 'Hợp lệ')
                         ->whereBetween('check_in', [
                             Carbon::create($year, $month, 1)->startOfMonth(),
                             Carbon::create($year, $month, 1)->endOfMonth(),

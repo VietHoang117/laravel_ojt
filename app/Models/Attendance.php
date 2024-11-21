@@ -15,7 +15,11 @@ class Attendance extends Model
         'check_in',
         'check_out',
         'date',
-        'status'
+        'status',
+        'justification_reason',
+        'is_confirmed',
+        'confirmed_by',
+        'confirmed_at'
     ];
 
     public function user()

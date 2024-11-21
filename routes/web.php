@@ -85,6 +85,18 @@ Route::group(['middleware' => 'Auth'], function () {
     });
 
     Route::get('/api/salary-level/{id}', [SalaryLevelController::class, 'getSalaryLevel'])->name('api.salary-level');
+    
+    //user
+    Route::post('/attendance/{id}/justify', [HomepageController::class, 'submitJustification'])
+    ->name('attendance.justify');
+
+    //admin
+    Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/admin/attendance', [AdminAttendanceController::class, 'index'])
+        ->name('admin.attendance.index');
+        Route::post('/admin/attendance/{id}/confirm', [AdminAttendanceController::class, 'confirmAttendance'])
+        ->name('admin.attendance.confirm');
+    });
 
 
 });

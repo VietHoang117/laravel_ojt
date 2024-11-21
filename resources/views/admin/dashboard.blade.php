@@ -7,6 +7,8 @@
         <div class="container mx-auto p-4 bg-white shadow-md mt-10">
             @if (auth()->user()->roles->first()->is_system_role != true)
                 <h1 class="text-2xl font-bold text-center text-gray-800">Bảng chấm công hàng tháng</h1>
+                
+
                 @if (session('message'))
                     <div class="alert alert-success">
                         {{ session('message') }}
