@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Justification;
 use App\Enums\JustificationStatusEnum;
-
+use Illuminate\Support\Facades\Validator;
 class JustificationController extends Controller
 {
     public function index(Request $request)
@@ -71,7 +71,27 @@ class JustificationController extends Controller
     }
 
     public function submit(Request $request, $id){
-        
+
+        $validator = Validator::make($request->all(), [
+            'response' => 'required|string|max:1000',
+            'status' => 'required'
+
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)
+                ->withInput();
+        }
+        $data= Justification::findOrFail($id);
+
+        if ($data) {
+            $data->update([
+                'response' => $request->input('response'),
+                'status' => $request->input('status')
+            ]);
+
+        };
+        return back()->with('message', 'Giải trình đã được xử lý.');
     }
 
 }

@@ -68,7 +68,7 @@ class HomepageController extends Controller
             'time' => $time,
             'checkIn' => !$checkIn,
             'checkOut' => !$checkOut,
-            
+
         ]);
 
     }
@@ -117,14 +117,14 @@ class HomepageController extends Controller
             ->first();
 
         if ($attendance && is_null($attendance->check_out)) {
-        
+
             $attendance->update([
                 'check_out' => $now,
                 'status' => $now->greaterThan($end_time)
-                    ? AttendanceStatusEnum::INVALID 
+                    ? AttendanceStatusEnum::INVALID
                     : AttendanceStatusEnum::VALID,
             ]);
-           
+
             return back()->with(['message' => 'Check-out thành công']);
 
         } elseif ($attendance && !is_null($attendance->check_out)) {
@@ -162,17 +162,17 @@ class HomepageController extends Controller
 
     public function submitJustification(Request $request, $id)
     {
-    $attendance = Attendance::findOrFail($id);
+        $attendance = Attendance::findOrFail($id);
 
-    if ($attendance->status === 'Không hợp lệ' && !$attendance->is_confirmed) {
-        $attendance->update([
-            'justification_reason' => $request->input('reason'),
-        ]);
+        if ($attendance->status === 'Không hợp lệ' && !$attendance->is_confirmed) {
+            $attendance->update([
+                'justification_reason' => $request->input('reason'),
+            ]);
 
-        return back()->with(['message' => 'Lý do giải trình đã được gửi.']);
-    }
+            return back()->with(['message' => 'Lý do giải trình đã được gửi.']);
+        }
 
-    return back()->with(['error' => 'Không thể giải trình bản ghi này.']);
+        return back()->with(['error' => 'Không thể giải trình bản ghi này.']);
     }
 
 
