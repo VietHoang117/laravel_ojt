@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\AttendanceStatusEnum;
 use Illuminate\Console\Command;
 use App\Models\Attendance;
 use Carbon\Carbon;
@@ -27,27 +28,21 @@ class ScanAttendance extends Command
      */
     public function handle()
     {
-        $start_time = Carbon::now()->setTime(8, 0, 0);
-        $end_time = Carbon::now()->setTime(17, 0, 0);
+    
+        // $this->info('Bắt đầu quét bảng chấm công...');
 
-        $this->info('Bắt đầu quét bảng chấm công...');
+        // // Lấy tất cả các bản ghi chưa được xác nhận
+        // $attendances = Attendance::whereNull('status')->get();
 
-        // Lấy tất cả các bản ghi chưa được xác nhận
-        $attendances = Attendance::whereNull('status')->get();
+        // foreach ($attendances as $attendance) {
 
-        foreach ($attendances as $attendance) {
-            $checkIn = Carbon::parse($attendance->check_in);
-            $checkOut = $attendance->check_out ? Carbon::parse($attendance->check_out) : null;
+        //     if ($attendance->check_in && !empty($attendance->check_out)) {
+        //         $attendance->update(['status' => AttendanceStatusEnum::INVALID]);
+        //     }
 
-            if ($checkOut && $checkIn->lessThan($start_time) && $checkOut->greaterThan($end_time)) {
-                $attendance->update(['status' => 'Hợp lệ']);
-            } else {
-                $attendance->update(['status' => 'Không hợp lệ']);
-            }
+        //     $this->info("Cập nhật trạng thái cho chấm công ID: {$attendance->id}");
+        // }
 
-            $this->info("Cập nhật trạng thái cho chấm công ID: {$attendance->id}");
-        }
-
-        $this->info('Hoàn thành quét bảng chấm công.');
+        // $this->info('Hoàn thành quét bảng chấm công.');
     }
 }

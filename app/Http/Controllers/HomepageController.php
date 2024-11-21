@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AttendanceStatusEnum;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -76,7 +77,6 @@ class HomepageController extends Controller
         $auth = Auth::user();
         $now = now();
         $start_time = now()->setTime(8, 0, 0);
-        $end_time = now()->setTime(17, 0, 0);
 
         // Check if user already checked in today
         $check = Attendance::where('user_id', $auth->id)
@@ -91,19 +91,14 @@ class HomepageController extends Controller
                 'date' => $now->toDateString(),
             ];
 
-            // Kiểm tra điều kiện thời gian
-        if ($now->greaterThan($end_time)) {
-            $data['status'] = 'Không hợp lệ'; // Check-in sau 17:00
-        } elseif ($now->greaterThan($start_time)) {
-            $data['status'] = 'Không hợp lệ'; // Check-in sau 08:00
-        } else {
-            $data['status'] = 'Hợp lệ'; // Check-in trước 08:00
-        }
-           
-            Attendance::create( $data);
+            if ($now->greaterThan($start_time)) {
+                $data['status'] = AttendanceStatusEnum::INVALID;
+            }
+
+            Attendance::create($data);
 
             return back()->with(['message' => 'Check In thành công']);
-            
+
         } else {
             return back()->with(['error' => 'Bạn đã check in ngày hôm nay.']);
         }
@@ -119,19 +114,16 @@ class HomepageController extends Controller
         $attendance = Attendance::where('user_id', $auth->id)
             ->whereDate('date', $now)
             ->first();
-        
+
         if ($attendance && is_null($attendance->check_out)) {
         
             $attendance->update([
                 'check_out' => $now,
+                'status' => $now->greaterThan($end_time)
+                    ? AttendanceStatusEnum::INVALID 
+                    : AttendanceStatusEnum::VALID,
             ]);
-            // dd($attendance->check_in,$end_time);
-            if ($attendance->check_in->lessThan($end_time) && $attendance->check_out->greaterThan($end_time)) {
-                $attendance->update(['status' => 'Hợp lệ']);
-            } else {
-                $attendance->update(['status' => 'Không hợp lệ']);
-            }
-
+           
             return back()->with(['message' => 'Check-out thành công']);
 
         } elseif ($attendance && !is_null($attendance->check_out)) {
@@ -149,8 +141,8 @@ class HomepageController extends Controller
 
 
         $lateTime = $lateMinutes > 0 ? sprintf('%02d:%02d', floor($lateMinutes / 60), $lateMinutes % 60) : '00:00';
-        
-        
+
+
         $overtimeMinutes = $checkOutTime->greaterThan($end_time) ? $checkOutTime->diffInMinutes($end_time) : 0;
         $overtime = $overtimeMinutes > 0 ? sprintf('%02d:%02d', floor($overtimeMinutes / 60), $overtimeMinutes % 60) : '00:00';
 
@@ -169,17 +161,17 @@ class HomepageController extends Controller
 
     public function submitJustification(Request $request, $id)
     {
-    $attendance = Attendance::findOrFail($id);
+        $attendance = Attendance::findOrFail($id);
 
-    if ($attendance->status === 'Không hợp lệ' && !$attendance->is_confirmed) {
-        $attendance->update([
-            'justification_reason' => $request->input('reason'),
-        ]);
+        if ($attendance->status === 'Không hợp lệ' && !$attendance->is_confirmed) {
+            $attendance->update([
+                'justification_reason' => $request->input('reason'),
+            ]);
 
-        return back()->with(['message' => 'Lý do giải trình đã được gửi.']);
-    }
+            return back()->with(['message' => 'Lý do giải trình đã được gửi.']);
+        }
 
-    return back()->with(['error' => 'Không thể giải trình bản ghi này.']);
+        return back()->with(['error' => 'Không thể giải trình bản ghi này.']);
     }
 
 

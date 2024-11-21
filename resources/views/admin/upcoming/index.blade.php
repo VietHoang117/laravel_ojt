@@ -12,7 +12,7 @@
                 <a href="{{route('upcoming.store')}}" class="col-md-2 btn btn-block btn-primary float-right">Thêm mới</a>
             </div>
             <div class="card-body">
-                <table id="example2" class="table table-bordered table-hover">
+               <table id="example2" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>Tên</th>

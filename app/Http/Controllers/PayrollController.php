@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Enums\DepartmentStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-
+use App\Enums\AttendanceStatusEnum;
 use App\Exports\PayrollExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -165,7 +165,7 @@ class PayrollController extends Controller
             })
             ->with([
                 'attendances' => function ($query) use ($year, $month) {
-                    $query->where('status', 'Hợp lệ')
+                    $query->where('status', AttendanceStatusEnum::VALID)
                         ->whereBetween('check_in', [
                             Carbon::create($year, $month, 1)->startOfMonth(),
                             Carbon::create($year, $month, 1)->endOfMonth(),
