@@ -91,7 +91,16 @@
                             @endif
                         </li>
                         
-
+                        <li class="nav-item">
+                            @if(App\Helpers\PermissionHelper::can('view_justifications'))
+                            <a href="{{ route('justifications.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Duyệt Giải Trình
+                                </p>
+                            </a>
+                            @endif
+                        </li>
 
                     </ul>
                 </nav>
