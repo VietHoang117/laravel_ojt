@@ -148,6 +148,7 @@ class HomepageController extends Controller
         $overtime = $overtimeMinutes > 0 ? sprintf('%02d:%02d', floor($overtimeMinutes / 60), $overtimeMinutes % 60) : '00:00';
 
         return [
+            'id'=> $attendance->id,
             'name' => $attendance->user->name,
             'room_name' => $attendance->user->department->room_name ?? '',
             'date' => $attendance->date,
@@ -160,21 +161,6 @@ class HomepageController extends Controller
         ];
     }
 
-    public function submitJustification(Request $request, $id)
-    {
-        $attendance = Attendance::findOrFail($id);
-
-        if ($attendance->status === 'Không hợp lệ' && !$attendance->is_confirmed) {
-            $attendance->update([
-                'justification_reason' => $request->input('reason'),
-            ]);
-
-            return back()->with(['message' => 'Lý do giải trình đã được gửi.']);
-        }
-
-        return back()->with(['error' => 'Không thể giải trình bản ghi này.']);
-    }
-
-
+    
 
 }

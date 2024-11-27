@@ -14,6 +14,8 @@ use MailerSend\Helpers\Builder\EmailParams;
 use MailerSend\MailerSend;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\JustificationController;
+use App\Http\Controllers\ConfigurationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +32,7 @@ Route::group(['middleware' => 'Auth'], function () {
     Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::get('/admin', [HomepageController::class, 'index'])->name('dashboard')->middleware('permission:view_dashboard');
+    Route::get('/admin/edit', [HomepageController::class, 'edit'])->name('edit')->middleware('permission:view_edit');
 
     Route::get('/admin/search', [HomepageController::class, 'index'])->name('search');
 
@@ -97,11 +100,23 @@ Route::group(['middleware' => 'Auth'], function () {
             Route::post('/edit/{id}', [JustificationController::class, 'saveEdit'])->name('save.edit');
             Route::get('/delete/{id}', [JustificationController::class, 'delete'])->name('delete');
             Route::post('/submit/{id}', [JustificationController::class, 'submit'])->name('submit');
+            Route::post('/report/{id}', [JustificationController::class, 'reportJustification'])->name('report');
         });
         Route::get('/export-payrolls', [PayrollController::class, 'exportPayrolls'])->name('export.payrolls');
     });
-    
 
+    Route::group(['middleware' => ['permission:view_configurations|create_configurations|edit_configurations|delete_configurations']], function () {
+        Route::group(['prefix' => 'configuration', 'as' => 'configurations.'], function () {
+            Route::get('/', [ConfigurationController::class, 'index'])->name('index');
+            Route::get('/store', [ConfigurationController::class, 'create'])->name('store');
+            Route::post('/save', [ConfigurationController::class, 'save'])->name('save');
+            Route::get('/edit/{id}', [ConfigurationController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [ConfigurationController::class, 'saveEdit'])->name('save.edit');
+            Route::get('/delete/{id}', [ConfigurationController::class, 'delete'])->name('delete');
+            Route::post('/submit/{id}', [ConfigurationController::class, 'submit'])->name('submit');
+        });
+        
+    });
 });
 
 
@@ -114,30 +129,10 @@ Route::get("/export", [UserController::class, "export"]);
 
 
 Route::get('/send-example-mail', function () {
-    $response = Http::withHeaders([
-        'Content-Type' => 'application/json',
-        'X-Requested-With' => 'XMLHttpRequest',
-        'Authorization' => 'Bearer mlsn.e827df1ce34e07cd5dc804fdb37231342ed232fc14ce535e01117410c2a64dc3', // Thay {your-token-here} bằng token thực tế
-    ])->post('https://api.mailersend.com/v1/email', [
-        'from' => [
-            'email' => 'smtp.mailersend.net',
-        ],
-        'to' => [
-            [
-                'email' => 'truongviethoang64@gmail.com',
-            ],
-        ],
-        'subject' => 'Hello from MailerSend!',
-        'text' => 'Greetings from the team, you got this message through MailerSend.',
-        'html' => 'Greetings from the team, you got this message through MailerSend.',
-    ]);
-    
-    // Kiểm tra kết quả phản hồi
-    if ($response->successful()) {
-        // Thành công
-        return 'Email sent successfully!';
-    } else {
-        // Xử lý lỗi
-        return $response->body();
-    }
+    Mail::to('truongviethoang64@gmail.com')->send(new ExampleEmail([
+        'name' => 'Xác Nhận Giải Trình', // Lấy tên nhân viên
+    ]));
+    return 'done';
 });
+
+

@@ -38,6 +38,7 @@ Tạo mới
                             <label for="exampleInputEmail1">Số điện thoại</label>
                             <input type="text" class="form-control" name="phone_number" placeholder="Enter ">
                         </div>
+                        
                         <div class="form-group">
                             <label class="form-label">Phòng ban</label>
                             <select class="form-select" name="department_id">

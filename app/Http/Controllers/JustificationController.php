@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Justification;
 use App\Enums\JustificationStatusEnum;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SettingEmail;
+
 class JustificationController extends Controller
 {
     public function index(Request $request)
@@ -23,22 +28,16 @@ class JustificationController extends Controller
         return view('admin.justification.index', compact(['data','status']));
     }
 
-    public function submitJustification(Request $request, $attendanceId)
+    public function reportJustification(Request $request, $id)
     {
-
+        // dd('123');
 
         $request->validate([
             'reason' => 'required|string|max:1000',
         ]);
 
-        $attendance = Justification::findOrFail($attendanceId);
-
-        if ($attendance->status !== 'Không hợp lệ') {
-            return back()->with('error', 'Chỉ có thể giải trình cho các bản ghi không hợp lệ.');
-        }
-
         Justification::create([
-            'attendance_id' => $attendance->id,
+            'attendance_id' => $id,
             'user_id' => Auth::id(),
             'reason' => $request->input('reason'),
         ]);
@@ -49,7 +48,7 @@ class JustificationController extends Controller
     // Admin duyệt giải trình
     public function confirmJustification(Request $request, $id)
     {
-        $justification = Justification::with('attendance')->findOrFail($id);
+        $justification = Justification::with(['attendance','user'])->findOrFail($id);
 
         $request->validate([
             'status' => 'required|in:Chấp nhận,Từ chối',
@@ -62,15 +61,24 @@ class JustificationController extends Controller
             'response' => $request->input('response'),
         ]);
 
-        if ($request->input('status') === 'Chấp nhận') {
-            $justification->attendance->update(['status' => 'Hợp lệ']);
-        }
-        
+            // Nếu trạng thái là "Chấp nhận", cập nhật trạng thái của Attendance thành "Hợp lệ"
+            if ($request->input('status') === JustificationStatusEnum::ACCEPT) {
+            $justification->attendance->update(['status' => AttendanceStatusEnum::VALID,]);
+
+            } elseif ($request->input('status') === JustificationStatusEnum::REFUSE) {
+            // Nếu từ chối, không thay đổi trạng thái Attendance nhưng có thể xử lý khác nếu cần
+            $justification->attendance->update(['status' => AttendanceStatusEnum::INVALID,]);
+            }
+            
+            
+            
 
         return back()->with('message', 'Giải trình đã được xử lý.');
     }
 
     public function submit(Request $request, $id){
+
+        
 
         $validator = Validator::make($request->all(), [
             'response' => 'required|string|max:1000',
@@ -82,7 +90,7 @@ class JustificationController extends Controller
             return back()->withErrors($validator)
                 ->withInput();
         }
-        $data= Justification::findOrFail($id);
+        $data = Justification::with(['attendance','user'])->findOrFail($id);
 
         if ($data) {
             $data->update([
@@ -90,8 +98,20 @@ class JustificationController extends Controller
                 'status' => $request->input('status')
             ]);
 
-        };
+        }
+
+        Mail::to($data->user->email)->send(new SettingEmail([
+            'name' => $data->user->name,
+            'content'=>'Yêu cầu của bạn đã được:'.$data->status,
+        ]));
+
         return back()->with('message', 'Giải trình đã được xử lý.');
+    }
+
+    public function delete($id) {
+        $data = Justification::query()->findOrFail($id);
+        $data->delete();
+        return back()->with('success', 'Xóa thành công!');
     }
 
 }

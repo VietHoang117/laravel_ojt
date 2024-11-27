@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Enums\AttendanceStatusEnum;
 use App\Exports\PayrollExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\SalaryLevel;
 
 class PayrollController extends Controller
 {
@@ -27,7 +28,7 @@ class PayrollController extends Controller
 
     public function store(Request $request)
     {
-        $users = User::select('id', 'name')->get(); // Fetch users with 'id' and 'name' fields
+        $users = User::select('id', 'name')->get();
         return view('admin.payroll.create', ['users' => $users]);
     }
 
@@ -36,11 +37,7 @@ class PayrollController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
-            'valid_workdays' => 'required|integer|min:0',
-            'invalid_workdays' => 'required|integer|min:0',
-            'month' => 'required|date_format:Y-m',
-            'salary_received' => 'required|numeric|min:0',
-            'processed_by' => 'required|integer',
+            'level_name' => 'required|string|max:255',
 
         ]);
 
@@ -49,13 +46,13 @@ class PayrollController extends Controller
                 ->withInput();
         }
 
+        $salaryLevel = SalaryLevel::create([
+            'user_id' => $request->input('user_id'),
+            'level_name' => $request->input('level_name'),
+        ]);
+
         $inputs = $request->only([
             'user_id',
-            'valid_workdays',
-            'invalid_workdays',
-            'month',
-            'salary_received',
-            'processed_by',  // processed_by from the form
 
         ]);
 

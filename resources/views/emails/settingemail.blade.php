@@ -35,6 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>{{$data['name']}}</h1>
+    <h1>Kính Gửi: {{$data['name']}}</h1>
+    <p>{{$data['content']}}</p>
 </body>
 </html>

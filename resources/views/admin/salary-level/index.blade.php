@@ -16,7 +16,7 @@ Bậc Lương
                 <thead>
                     <tr>
                         <th>STT</th>
-                        <th>Tên nhân viên</th>
+                        
                         <th>Bậc Lương</th>
                         <th>Lương Ngày</th>
                         <th>Lương Tháng</th>
@@ -29,9 +29,7 @@ Bậc Lương
 
                         <tr>
                             <td>{{$value->id}}</td>
-                            <td>
-                                {{ $value->user->name }}
-                            </td>
+                            
                             <td>{{ $value->level_name }}</td>
                             <td>{{ $value->daily_rate }}</td>
                             <td>{{ $value->monthly_rate }}</td>

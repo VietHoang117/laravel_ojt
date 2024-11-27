@@ -12,6 +12,7 @@ use App\Mail\ExampleEmail;
 use App\Models\ReminderSchedule;
 use Illuminate\Console\Command;
 
+
 class SendMailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;

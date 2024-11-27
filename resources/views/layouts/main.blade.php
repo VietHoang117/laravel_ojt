@@ -102,6 +102,17 @@
                             @endif
                         </li>
 
+                        <li class="nav-item">
+                            @if(App\Helpers\PermissionHelper::can('view_configurations'))
+                            <a href="{{ route('configurations.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Cấu Hình Chung
+                                </p>
+                            </a>
+                            @endif
+                        </li>
+
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
