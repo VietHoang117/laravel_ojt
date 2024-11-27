@@ -69,9 +69,6 @@ class JustificationController extends Controller
             // Nếu từ chối, không thay đổi trạng thái Attendance nhưng có thể xử lý khác nếu cần
             $justification->attendance->update(['status' => AttendanceStatusEnum::INVALID,]);
             }
-            
-            
-            
 
         return back()->with('message', 'Giải trình đã được xử lý.');
     }
