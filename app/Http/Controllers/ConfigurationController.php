@@ -5,28 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfigurationEmail;
 use App\Models\Attendance;
-use App\Enums\AttendanceStatusEnum;
+use App\Models\ReminderSchedule;
 
 
 class ConfigurationController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-
-        $attendance = Attendance::firstOrCreate(
-            ['user_id' => $user->id],
-            [
-                'check_in' => '08:00', // Giá trị mặc định nếu chưa có
-                'check_out' => '17:00' // Giá trị mặc định nếu chưa có
-            ]
-        );
+        $data = ReminderSchedule::query()
+                ->with('user')
+                ->OwnedByUserGroup()
+                ->paginate(10);
         
-        return view('configuration.index', compact('attendance'));
+        return view('admin.reminder-schedule.index', compact('data'));
     }
 
     public function store(Request $request)
