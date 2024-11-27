@@ -10,7 +10,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ExampleEmail;
 use App\Models\ReminderSchedule;
-use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use App\Enums\ReminderScheduleStatusEnum;
+use Illuminate\Support\Facades\Auth;
 
 
 class SendMailJob implements ShouldQueue
@@ -32,9 +34,32 @@ class SendMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->reminder->email)->send(new ExampleEmail([
-            'name' => $this->reminder->user->name, // Lấy tên nhân viên
-        ]));
-        ReminderSchedule::where('id', $this->reminder->id)->update(['is_sent' => true]);
+        try {
+            // Gửi email
+            Mail::to($this->reminder->email)->send(new ExampleEmail([
+                'name' => $this->reminder->user->name,
+                'checkin_url' => env('APP_URL') . 'admin'
+            ]));
+        
+            // Lưu log khi gửi thành công
+            DB::table('reminder_schedule_logs')->insert([
+                'reminder_schedule_id' => $this->reminder->id,
+                'status' => ReminderScheduleStatusEnum::SENT,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        
+        } catch (\Exception $e) {
+            // Lưu log khi gửi thất bại
+            DB::table('reminder_schedule_logs')->insert([
+                'reminder_schedule_id' => $this->reminder->id,
+                'status' => ReminderScheduleStatusEnum::NOTSENT,
+                'error_message' => $e->getMessage(), // Lưu thông tin lỗi
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        
+        }
+        
     }
 }

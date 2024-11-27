@@ -19,7 +19,6 @@ Danh sách mail
                         <th>Tên nhân viên</th>
                         <th>Email</th>
                         <th>Thời gian gửi mail</th>
-                        <th>Hành Động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,13 +31,6 @@ Danh sách mail
                             </td>
                             <td>{{ $value->email }}</td>
                             <td>{{ $value->reminder_time }}</td>
-                            <td>
-                                <a href="{{ route('configurations.edit', $value->id) }}" class="btn btn-success">Sửa</a>
-                                <a href="{{ route('configurations.delete', $value->id) }}" class="btn btn-danger"
-                                    onclick="return confirmDelete()">
-                                    Xóa
-                                </a>
-                            </td>
                         </tr>
                     @endforeach
                 </tbody>

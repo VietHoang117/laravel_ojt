@@ -30,7 +30,6 @@ class JustificationController extends Controller
 
     public function reportJustification(Request $request, $id)
     {
-        // dd('123');
 
         $request->validate([
             'reason' => 'required|string|max:1000',

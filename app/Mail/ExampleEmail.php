@@ -29,7 +29,7 @@ class ExampleEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Example Email',
+            subject: 'Check in đi mày',
         );
     }
 
@@ -39,7 +39,7 @@ class ExampleEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.example', // Tên view (Blade template) của email
+            view: 'emails.configurationemail', // Tên view (Blade template) của email
         );
     }
 

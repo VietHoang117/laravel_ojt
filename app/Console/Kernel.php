@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:update-payrolls')->dailyAt('6:00');
         $schedule->command('attendance:scan')->dailyAt('23:00'); // Chạy hàng ngày lúc 23h
+        $schedule->command('reminders:send')->dailyAt('6:00'); //Chạy hàng ngày lúc 6h
     }
 
     /**

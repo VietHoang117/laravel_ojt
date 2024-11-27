@@ -110,9 +110,9 @@ Route::group(['middleware' => 'Auth'], function () {
             Route::get('/', [ConfigurationController::class, 'index'])->name('index');
             Route::get('/store', [ConfigurationController::class, 'create'])->name('store');
             Route::post('/save', [ConfigurationController::class, 'save'])->name('save');
-            Route::get('/edit/{id}', [ConfigurationController::class, 'edit'])->name('edit');
-            Route::post('/edit/{id}', [ConfigurationController::class, 'saveEdit'])->name('save.edit');
-            Route::get('/delete/{id}', [ConfigurationController::class, 'delete'])->name('delete');
+            // Route::get('/edit/{id}', [ConfigurationController::class, 'edit'])->name('edit');
+            // Route::post('/edit/{id}', [ConfigurationController::class, 'saveEdit'])->name('save.edit');
+            // Route::get('/delete/{id}', [ConfigurationController::class, 'delete'])->name('delete');
             Route::post('/submit/{id}', [ConfigurationController::class, 'submit'])->name('submit');
         });
         
@@ -128,11 +128,8 @@ Route::get("/view", [UserController::class, "view"]);
 Route::get("/export", [UserController::class, "export"]);
 
 
-Route::get('/send-example-mail', function () {
-    Mail::to('truongviethoang64@gmail.com')->send(new ExampleEmail([
-        'name' => 'Xác Nhận Giải Trình', // Lấy tên nhân viên
-    ]));
-    return 'done';
+Route::get('/b', function () {
+    dd(env('APP_URL'));
 });
 
 

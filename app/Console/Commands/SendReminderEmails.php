@@ -29,12 +29,13 @@ class SendReminderEmails extends Command
     {
         $reminders = ReminderSchedule::query()
             ->with('user')
-            ->where('is_sent', false)
             ->get();
 
         foreach ($reminders as $reminder) {
-            $delay = Carbon::now()->diffInSeconds(Carbon::parse($reminder->reminder_time), false);
+            $reminderTime = Carbon::today()->setTimeFromTimeString($reminder->reminder_time);
 
+            $delay = Carbon::now()->diffInSeconds($reminderTime, false);
+            
             if ($delay > 0) {
                 SendMailJob::dispatch($reminder)->delay($delay);
                 $this->info("Scheduled reminder for: {$reminder->email} at {$reminder->reminder_time}");

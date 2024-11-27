@@ -23,28 +23,29 @@ class ConfigurationController extends Controller
         return view('admin.reminder-schedule.index', compact('data'));
     }
 
-    public function store(Request $request)
+    public function create(Request $request)
     {
-        $attendance = Attendance::select('user_id')->get();
-        return view('configuration.create', ['user_id' => $attendance]);
+        return view('admin.reminder-schedule.create');
     }
 
     public function save(Request $request)
     {
-        $request->validate([
-            'check_in' => 'required|date_format:H:i',
-            'check_out' => 'required|date_format:H:i',
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'reminder_time' => 'required',
         ]);
 
-        // Lấy thông tin người dùng hiện tại
+        if ($validator->fails()) {
+            return back()->withErrors($validator)
+                        ->withInput();
+        }
         $user = Auth::user();
 
-        // Cập nhật hoặc tạo mới thông tin giờ check-in/check-out
-        $attendance = Attendance::updateOrCreate(
+        ReminderSchedule::updateOrCreate(
             ['user_id' => $user->id],
             [
-                'check_in' => $request->check_in,
-                'check_out' => $request->check_out,
+                'email' => $request->input('email'),
+                'reminder_time' =>$request->input('reminder_time'),
             ]
         );
 

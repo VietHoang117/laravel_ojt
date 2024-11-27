@@ -12,8 +12,7 @@ class ReminderSchedule extends Model
     protected $fillable = [
         'user_id',
         'email',
-        'reminder_time',
-        'is_sent',
+        'reminder_time'
     ];
 
     protected $casts = [
@@ -28,11 +27,11 @@ class ReminderSchedule extends Model
     public function scopeOwnedByUserGroup($query)
     {
         $user = Auth::user();
-
-        if (!$user->roles()->where('is_system_role', true)->exists()) {
+        
+        if ($user->roles()->where('is_system_role', true)->exists()) {
             return $query;
         } else {
-            $query->where('user_id', $user->id);
+            return $query->where('user_id', $user->id);
         };
     }
 }
