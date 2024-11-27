@@ -27,7 +27,13 @@ class RolesSeeder extends Seeder
             'create_department',
             'edit_department',
             'delete_department',
-            'view_profile'
+            'view_profile',
+            'view_justifications',
+            'create_justifications',
+            'edit_justifications',
+            'delete_justifications',
+            'view_configurations',
+            'create_configurations',
         ];
 
         $permissionIds = [];
