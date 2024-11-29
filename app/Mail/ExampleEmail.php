@@ -29,7 +29,7 @@ class ExampleEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Check in đi mày',
+            subject: 'Nhắc Nhở Check in',
         );
     }
 

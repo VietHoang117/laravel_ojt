@@ -36,9 +36,8 @@ class PayrollController extends Controller
     public function save(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
+            'name' => 'required',
             'level_name' => 'required|string|max:255',
-
         ]);
 
         if ($validator->fails()) {
@@ -46,16 +45,12 @@ class PayrollController extends Controller
                 ->withInput();
         }
 
-        $salaryLevel = SalaryLevel::create([
-            'user_id' => $request->input('user_id'),
+        $inputs = $request->only([
+            'name' => $request->input('name'),
             'level_name' => $request->input('level_name'),
         ]);
 
-        $inputs = $request->only([
-            'user_id',
-
-        ]);
-
+        $inputs['processed_by'] = auth()->id();
 
         $payroll = Payroll::create($inputs);
 

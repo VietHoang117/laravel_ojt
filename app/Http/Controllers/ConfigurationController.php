@@ -67,7 +67,7 @@ class ConfigurationController extends Controller
             return back()->withErrors($validator)
                 ->withInput();
         }
-        $data = Justification::with(['attendance','user'])->findOrFail($id);
+        $data = ReminderSchedule::with(['attendance','user'])->findOrFail($id);
 
         if ($data) {
             $data->update([

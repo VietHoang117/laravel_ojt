@@ -7,6 +7,7 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class HomepageController extends Controller
 {
@@ -161,6 +162,46 @@ class HomepageController extends Controller
         ];
     }
 
+    public function edit($id)
+    {
+        // Lấy thông tin chấm công theo ID
+        $attendance = Attendance::with('user')->findOrFail($id);
+
+        // Trả về view kèm thông tin attendance
+        return view('admin.attendance.edit', [
+        'attendance' => $attendance,
+        ]);
+    }
+
+
     
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date',
+            'check_in' => 'nullable|date_format:H:i',
+            'check_out' => 'nullable|date_format:H:i|after_or_equal:check_in',
+            'status' => 'required|in:'.implode(',', AttendanceStatusEnum::getValues()),
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // Tìm bản ghi chấm công
+        $attendance = Attendance::findOrFail($id);
+
+        // Cập nhật thông tin
+        $attendance->update([
+            'date' => $request->input('date'),
+            'check_in' => $request->input('check_in') ? Carbon::createFromFormat('H:i', $request->input('check_in'))->toDateTimeString() : null,
+            'check_out' => $request->input('check_out') ? Carbon::createFromFormat('H:i', $request->input('check_out'))->toDateTimeString() : null,
+            'status' => $request->input('status'),
+        ]);
+
+        return redirect()->route('admin.dashboard')->with('message', 'Cập nhật thông tin chấm công thành công!');
+    }
+
+
 
 }
