@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SettingEmail;
+use App\Enums\AttendanceStatusEnum;
 
 class JustificationController extends Controller
 {
