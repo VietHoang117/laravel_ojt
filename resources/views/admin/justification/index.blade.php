@@ -10,6 +10,16 @@
 
     <div class="card-body">
         <table id="payrollTable" class="table table-bordered table-hover">
+        <div class="col-md-6">
+                    <div class="form-group">
+                        <form method="get" action="{{ route('search') }}">
+                            <div class="input-group">
+                                <input class="form-control" name="search" placeholder="Tìm Kiếm...">
+                                <button type="submit" class="btn btn-primary">Tìm Kiếm </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             <thead>
                 <tr>
                     <th>STT</th>
