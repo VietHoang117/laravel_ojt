@@ -164,6 +164,7 @@ class HomepageController extends Controller
 
     public function edit($id)
     {
+        // dd('1');
         // Lấy thông tin chấm công theo ID
         $attendance = Attendance::with('user')->findOrFail($id);
 
@@ -173,15 +174,13 @@ class HomepageController extends Controller
         ]);
     }
 
-
-    
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'date' => 'required|date',
             'check_in' => 'nullable|date_format:H:i',
             'check_out' => 'nullable|date_format:H:i|after_or_equal:check_in',
-            'status' => 'required|in:'.implode(',', AttendanceStatusEnum::getValues()),
+            'status' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -199,7 +198,7 @@ class HomepageController extends Controller
             'status' => $request->input('status'),
         ]);
 
-        return redirect()->route('admin.dashboard')->with('message', 'Cập nhật thông tin chấm công thành công!');
+        return redirect()->route('dashboard')->with('message', 'Cập nhật thông tin chấm công thành công!');
     }
 
 

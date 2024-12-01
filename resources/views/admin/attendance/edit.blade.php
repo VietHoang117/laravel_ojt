@@ -54,8 +54,8 @@
                             <div class="form-group">
                                 <label for="status">Trạng thái</label>
                                 <select class="form-control" id="status" name="status" required>
-                                    <option value="present" {{ $attendance->status === 'present' ? 'selected' : '' }}>Hợp lệ</option>
-                                    <option value="absent" {{ $attendance->status === 'absent' ? 'selected' : '' }}>Không hợp lệ</option>
+                                    <option value="Hợp lệ" {{ $attendance->status === 'Hợp lệ' ? 'selected' : '' }}>Hợp lệ</option>
+                                    <option value="Không hợp lệ" {{ $attendance->status === 'Không hợp lệ' ? 'selected' : '' }}>Không hợp lệ</option>
                                 </select>
                             </div>
                         </div>

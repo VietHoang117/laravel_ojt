@@ -118,7 +118,7 @@ Route::group(['middleware' => 'Auth'], function () {
         
     });
 
-    Route::get('/attendance/{id}/edit', [HomepageController::class, 'edit'])->name('attendance.edit');
+    Route::get('/attendance/{id}/edit', [HomepageController::class, 'edit'])->name(name: 'attendance.edit');
     Route::put('/attendance/{id}', [HomepageController::class, 'update'])->name('attendance.update');
 
 });

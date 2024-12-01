@@ -208,7 +208,7 @@
                                             {{ $r['status'] }}
                                         </span></td>
                                     <td>
-                                        <a href="{{ route('edit', $r['id']) }}" class="btn btn-success">Sửa</a>
+                                        <a href="{{ route('attendance.edit', $r['id']) }}" class="btn btn-success">Sửa</a>
                                         <a class="btn btn-danger" onclick="return confirmDelete()">
                                             Xóa
                                         </a>
