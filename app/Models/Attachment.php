@@ -14,5 +14,9 @@ class Attachment extends Model
         'file_path'
     ];
 
+    public function proposal()
+    {
+        return $this->belongsTo(Proposal::class, 'proposal_id');
+    }
 
 }
