@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger(column: 'proposal_type_id')->comment('Khóa ngoại đến bảng loại đề xuất');
             $table->string('proposal_name')->comment('Tên đề xuất');
             $table->string('content', 300);
-            $table->enum('status', allowed: LeaveStatusEnum::getValues())->default(LeaveStatusEnum::DRAFT); // trang thái nháp, gửi duyệt, từ chối, hoàn thành
+            $table->enum(column: 'status', allowed: LeaveStatusEnum::getValues())->default(LeaveStatusEnum::DRAFT); // trang thái nháp, gửi duyệt, từ chối, hoàn thành
             $table->unsignedInteger(column: 'user_id')->comment('Người khởi tạo');
             $table->unsignedInteger('user_manager_id')->comment('Người quản lý');
             $table->unsignedInteger('user_reviewer_id')->nullable()->comment('Người duyệt');

@@ -16,12 +16,18 @@ class LeaveRequestController extends Controller
     public function index()
     {
 
-        $data = Proposal::with('user')->paginate(10);
+        $data = Proposal::with('user','type','attachments')->paginate(10);
         $dexuats = ProposalType::all(); // with('user)
         $nguoiquanlys = User::all();
 
         $status = LeaveStatusEnum::getValues();
-        return view('admin.leave.index', ['data' => $data, 'dexuats' => $dexuats, 'nguoiquanlys' => $nguoiquanlys]);
+
+        return view('admin.leave.index', [
+            'data' => $data,
+            'dexuats' => $dexuats,
+            'nguoiquanlys' => $nguoiquanlys,
+            'status' => $status,
+        ]);
     }
 
 
@@ -34,7 +40,7 @@ class LeaveRequestController extends Controller
             'user_reviewer_id' => 'nullable|exists:user_manager_id',
         ]);
     
-        // Nếu dữ liệu không hợp lệ, trả về kèm thông báo lỗi
+        
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
