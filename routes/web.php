@@ -7,16 +7,9 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\SalaryLevelController;
 use Illuminate\Support\Facades\Route;
-use App\Mail\ExampleEmail;
-use Illuminate\Support\Facades\Mail;
-use MailerSend\Helpers\Builder\Recipient;
-use MailerSend\Helpers\Builder\EmailParams;
-use MailerSend\MailerSend;
-use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\JustificationController;
 use App\Http\Controllers\ConfigurationController;
-
-
+use App\Http\Controllers\LeaveRequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -120,6 +113,24 @@ Route::group(['middleware' => 'Auth'], function () {
 
     Route::get('/attendance/{id}/edit', [HomepageController::class, 'edit'])->name(name: 'attendance.edit');
     Route::put('/attendance/{id}', [HomepageController::class, 'update'])->name('attendance.update');
+
+
+    // đề xuất nghỉ phép
+    Route::group(['middleware' => ['permission:view_leaves|create_leaves|edit_leaves|delete_leaves']], function () {
+        Route::group(['prefix' => 'admin/leaves', 'as' => 'leaves.'], function () {
+            Route::get('/', [LeaveRequestController::class, 'index'])->name('index');            
+            Route::post('/save', [LeaveRequestController::class, 'save'])->name('save');
+
+            
+            Route::get('/edit/{id}', [LeaveRequestController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [LeaveRequestController::class, 'saveEdit'])->name('save.edit');
+            Route::get('/delete/{id}', [LeaveRequestController::class, 'delete'])->name('delete');
+        });
+        Route::get('/export-payrolls', [PayrollController::class, 'exportPayrolls'])->name('export.payrolls');
+    });
+
+
+
 
 });
 

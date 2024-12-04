@@ -103,6 +103,17 @@
                         </li>
 
                         <li class="nav-item">
+                            @if(App\Helpers\PermissionHelper::can('view_leaves'))
+                            <a href="{{ route('leaves.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Đề xuất
+                                </p>
+                            </a>
+                            @endif
+                        </li>
+
+                        <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_configurations'))
                             <a href="{{ route('configurations.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
