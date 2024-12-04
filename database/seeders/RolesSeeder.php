@@ -48,8 +48,7 @@ class RolesSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => 'admin', 'is_system_role' => true]);
         $memberRole = Role::firstOrCreate(['name' => 'member']);
 
-        $memberPermissions = ['view_dashboard', 'check_in', 'check_out', 'view_profile', 'view_configurations', 'create_configurations', 'edit_configurations', 'delete_configurations',            'view_justifications',
-        'create_justifications'];
+        $memberPermissions = ['view_dashboard', 'check_in', 'check_out', 'view_profile', 'view_configurations', 'create_configurations', 'edit_configurations', 'delete_configurations','create_justifications'];
 
         $memberRole->permissions()->sync(array_map(fn($name) => $permissionIds[$name], $memberPermissions));
 
