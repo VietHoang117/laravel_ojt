@@ -53,30 +53,82 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel-{{ $value->id }}">Trả Lời
-                                                    Giải Trình</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel-{{ $value->id }}">Thêm Mới Đề Xuất</h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
+
+
                                             <div class="modal-body">
+                                                
                                                 <div class="form-group">
-                                                    <label for="message-text" class="col-form-label">Phản Hồi:</label>
-                                                    <textarea class="form-control" id="message-text-{{ $value->id }}" name="response"></textarea>
+                                                    <label for="type" class="form-label">Loại đề xuất</label>
+                                                    <select class="form-select" id="type" name="type">
+                                                        <option value=""> Chọn loại đề xuất </option>
+                                                        @foreach ($status as $item)
+                                                        <option value="{{ $item }}">{{ $item }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="form-label">Trạng Thái</label>
+                                                    <label for="date">Ngày lập</label>
+                                                    <input type="date" id="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}">
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="message-text" class="col-form-label">Tên Đề Xuất:</label>
+                                                    <textarea class="form-control" id="message-text-{{ $value->id }}" name="response"></textarea>
+                                                </div>
+
+                                                <div class="row g-3">
+                                                    <div class="col">
+                                                        <label for="message-text" class="col-form-label">Mức độ ưu tiên:</label>
+                                                        <input type="text" class="form-control" placeholder="Mức độ ưu tiên" aria-label="Mức độ ưu tiên">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label for="message-text" class="col-form-label">Số giờ xử lí:</label>
+                                                        <input type="text" class="form-control" placeholder="Số giờ xử lí" aria-label="Số giờ xử lí">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="message-text" class="col-form-label">Nội Dung:</label>
+                                                    <textarea class="form-control" id="message-text-{{ $value->id }}" name=""></textarea>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="form-label">Phòng Ban</label>
                                                     <select class="form-select" name="status">
-                                                        <option value="">--- Chọn Trạng Thái ---</option>
+                                                        <option value=""> Chọn Phòng Ban </option>
                                                         @foreach ($status as $item)
                                                             <option value="{{ $item }}">{{ $item }}
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                </div>
                                             </div>
+
+                                            <div class="form-group">
+                                                    <label class="form-label"> Người Quản Lí </label>
+                                                    <select class="form-select" name="status">
+                                                        <option value=""> Chọn Quản Lí</option>
+                                                        @foreach ($status as $item)
+                                                            <option value="{{ $item }}">{{ $item }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="attachments" class="form-label">Tệp đính kèm</label>
+                                                <input type="file" class="form-control" id="attachments" name="attachments[]" multiple>
+                                                <small class="form-text text-muted">Kéo thả tệp đính kèm vào đây.</small>
+                                            </div>
+
+                                        </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Hủy</button>
