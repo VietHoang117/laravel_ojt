@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Auth;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\ProposalType;
 class Proposal extends Model
 {
     use HasFactory;
@@ -33,11 +34,20 @@ class Proposal extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'user_manager_id');
+    }
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'user_reviewer_id');
+    }
 
     public function attachments()
     {
         return $this->hasMany(Attachment::class, 'proposal_id');
     }
+    
 
     public function scopeOwnedByUserGroup($query)
     {

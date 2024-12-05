@@ -13,8 +13,5 @@ class ProposalType extends Model
         'type_name',
     ];
 
-    public function proposals()
-    {
-        return $this->hasMany(Proposal::class, 'proposal_type_id');
-    }
+    
 }

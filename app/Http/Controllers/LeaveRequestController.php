@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Enums\LeaveStatusEnum;
 use Illuminate\Support\Facades\Validator;
 
+
 class LeaveRequestController extends Controller
 {
     public function index()
     {
         $data = Proposal::query()
-            ->with('user', 'type', 'attachments')
+            ->with(['user', 'type', 'attachments','manager','reviewer'])
             ->OwnedByUserGroup()
             ->paginate(10);
         $dexuats = ProposalType::all();
@@ -111,6 +112,13 @@ class LeaveRequestController extends Controller
 
         return back()->with('success', 'Đã gửi thành công');
 
+    }
+
+    public function delete($id)
+    {
+        $data = Proposal::query()->findOrFail($id);
+        $data->delete();
+        return back()->with('success', 'Xóa thành công!');
     }
 
 }
