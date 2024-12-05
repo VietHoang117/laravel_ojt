@@ -51,7 +51,7 @@ Bảng Lương
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $value->user->name }}</td>
-                            <td>{{ $value->salarylevel->level_name }}</td>
+                            <td>{{ $value->salarylevel ? $value->salarylevel->level_name : 'Chưa có' }}</td>
                             <td>{{ $value->user->department ? $value->user->department->room_name : '' }}</td>
                             <td>{{ $value->month }}</td>
                             <td>{{ $value->valid_workdays }}</td>

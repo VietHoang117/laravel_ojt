@@ -126,8 +126,11 @@ Route::group(['middleware' => 'Auth'], function () {
             Route::get('/edit/{id}', [LeaveRequestController::class, 'edit'])->name('edit');
             Route::post('/edit/{id}', [LeaveRequestController::class, 'saveEdit'])->name('save.edit');
             Route::get('/delete/{id}', [LeaveRequestController::class, 'delete'])->name('delete');
+            
+
         });
-        Route::get('/export-payrolls', [PayrollController::class, 'exportPayrolls'])->name('export.payrolls');
+        
+        
     });
 
 

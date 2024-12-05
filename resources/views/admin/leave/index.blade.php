@@ -97,13 +97,17 @@
         <!-- Table -->
         <div class="row mb-3">
             <div class="col-md-6">
-                <form method="GET" action="{{ route('leaves.index') }}">
+                <form method="get" action="{{ route('leaves.index') }}">
                     <div class="input-group">
-                        <input class="form-control" name="search" placeholder="Tìm Kiếm...">
+                        <input class="form-control" name="search" value="{{ request('search') }}"
+                            placeholder="Tìm Kiếm...">
                         <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
                     </div>
                 </form>
             </div>
+
+
+
             <div class="col-md-6 text-right">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLeaves">
                     Làm Đơn
@@ -133,10 +137,11 @@
                         <td>{{ $value->reviewer->name ?? 'Chưa chỉ định' }}</td>
                         <td>{{ $value->status }}</td>
                         <td>
-                            <button type="button" class="btn btn-success" data-toggle="modal"
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#showFormModal-{{ $value->id }}" title="Hiển thị thông tin chi tiết">
                                 Hiển Thị
                             </button>
+
                             <!-- Gửi người duyệt -->
                             @if ($value->status === $leaveStatusEnum::DRAFT)
                                 <button type="button" class="btn btn-success" data-toggle="modal"
@@ -144,12 +149,11 @@
                                     title="Chỉ đích danh người duyệt">
                                     Người duyệt
                                 </button>
-                                
-                                    <a href="{{ route('leaves.delete', $value->id) }}" class="btn btn-danger"
-                                        onclick="return confirmDelete()">
-                                        Xóa
-                                    </a>
-                                
+
+                                <a href="{{ route('leaves.delete', $value->id) }}" class="btn btn-danger"
+                                    onclick="return confirmDelete()">
+                                    Xóa
+                                </a>
                             @endif
 
                             @if ($value->status === $leaveStatusEnum::SEND && Auth::id() === $value->user_reviewer_id)
@@ -266,7 +270,7 @@
                                         </div>
                                         <div class="modal-footer bg-light">
                                             <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Đóng</button>
+                                                data-dismiss="modal">Đóng</button>
                                         </div>
                                     </div>
                                 </div>

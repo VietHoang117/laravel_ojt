@@ -14,15 +14,31 @@ use Illuminate\Support\Facades\Validator;
 
 class LeaveRequestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Lấy giá trị từ input 'search'
+        $search = $request->input('search');
+
+        // Xây dựng query tìm kiếm
         $data = Proposal::query()
-            ->with(['user', 'type', 'attachments','manager','reviewer'])
-            ->OwnedByUserGroup()
-            ->paginate(10);
+            ->with(['user', 'type', 'attachments', 'manager', 'reviewer'])
+            ->OwnedByUserGroup();
+
+        if (!empty($search)) {
+            $data->where(function ($query) use ($search) {
+                $query->where('proposal_name', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($subQuery) use ($search) {
+                        $subQuery->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        $data = $data->paginate(10);
+
+        // Các dữ liệu khác
         $dexuats = ProposalType::all();
         $nguoiquanlys = User::all();
-
         $status = LeaveStatusEnum::getValues();
 
         return view('admin.leave.index', [
@@ -31,9 +47,10 @@ class LeaveRequestController extends Controller
             'nguoiquanlys' => $nguoiquanlys,
             'status' => $status,
             'leaveStatusEnum' => LeaveStatusEnum::class,
+            'search' => $search, // Trả lại giá trị tìm kiếm cho view
         ]);
-
     }
+
 
 
     public function save(Request $request)
@@ -84,7 +101,6 @@ class LeaveRequestController extends Controller
         }
 
         return back()->with('success', 'Đã tạo đề xuất thành công');
-
     }
 
     public function approval(Request $request, $id)
@@ -111,7 +127,6 @@ class LeaveRequestController extends Controller
         $data->update(['status' => $request->input('browse')]);
 
         return back()->with('success', 'Đã gửi thành công');
-
     }
 
     public function delete($id)
@@ -120,5 +135,4 @@ class LeaveRequestController extends Controller
         $data->delete();
         return back()->with('success', 'Xóa thành công!');
     }
-
 }
