@@ -117,8 +117,8 @@ Route::group(['middleware' => 'Auth'], function () {
 
     // đề xuất nghỉ phép
     Route::group(['middleware' => ['permission:view_leaves|create_leaves|edit_leaves|delete_leaves']], function () {
-        Route::group(['prefix' => 'admin/leaves', 'as' => 'leaves.'], function () {
-            Route::get('/', [LeaveRequestController::class, 'index'])->name('index');            
+        Route::group(['prefix' => 'admin/leaves', 'as' => 'leaves.'], routes: function () {
+            Route::get('/', [LeaveRequestController::class, 'index'])->name('index');
             Route::post('/save', [LeaveRequestController::class, 'save'])->name('save');
             Route::post('/approval/{id}', [LeaveRequestController::class, 'approval'])->name('approval');
             Route::post('/browse/{id}', [LeaveRequestController::class, 'browse'])->name('browse');

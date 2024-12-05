@@ -23,7 +23,18 @@ class Proposal extends Model
         'status'
     ];
 
+    public function type()
+    {
+        return $this->belongsTo(ProposalType::class, 'proposal_type_id');
+    }
 
-    // liên kết đến bảng user
-    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'proposal_id');
+    }
 }
