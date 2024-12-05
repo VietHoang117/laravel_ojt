@@ -15,9 +15,11 @@ class LeaveRequestController extends Controller
 {
     public function index()
     {
-
-        $data = Proposal::with('user', 'type', 'attachments')->paginate(10);
-        $dexuats = ProposalType::all(); // with('user)
+        $data = Proposal::query()
+            ->with('user', 'type', 'attachments')
+            ->OwnedByUserGroup()
+            ->paginate(10);
+        $dexuats = ProposalType::all();
         $nguoiquanlys = User::all();
 
         $status = LeaveStatusEnum::getValues();

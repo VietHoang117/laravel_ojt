@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,5 +37,16 @@ class Proposal extends Model
     public function attachments()
     {
         return $this->hasMany(Attachment::class, 'proposal_id');
+    }
+
+    public function scopeOwnedByUserGroup($query)
+    {
+        $user = Auth::user();
+        
+        if ($user->roles()->where('is_system_role', true)->exists()) {
+            return $query;
+        } else {
+            return $query->where('user_id', $user->id);
+        };
     }
 }
