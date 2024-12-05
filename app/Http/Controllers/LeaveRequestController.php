@@ -9,6 +9,8 @@ use App\Models\Proposal;
 use App\Models\Attachment;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\LeaveStatusEnum;
+use Illuminate\Support\Facades\Validator;
+
 class LeaveRequestController extends Controller
 {
     public function index()

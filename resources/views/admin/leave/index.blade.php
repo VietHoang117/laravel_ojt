@@ -86,44 +86,12 @@
     </form>
 
     <!-- Table -->
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <form method="GET" action="{{ route('leaves.index') }}">
-                <div class="input-group">
-                    <input class="form-control" name="search" placeholder="Tìm Kiếm...">
-                    <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6 text-right">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLeaves">
-                Phản Hồi
-            </button>
-        </div>
-    </div>
+
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
-    <table id="payrollTable" class="table table-bordered table-hover">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <form method="get" action="{{ route('search') }}">
-                        <div class="input-group">
-                            <input class="form-control" name="search" placeholder="Tìm Kiếm...">
-                            <button type="submit" class="btn btn-primary">Tìm Kiếm </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLeaves">
-                    Phản Hồi
-                </button>
-            </div>
-        </div>
 
     <!-- Table -->
     <div class="row mb-3">
