@@ -120,7 +120,8 @@ Route::group(['middleware' => 'Auth'], function () {
         Route::group(['prefix' => 'admin/leaves', 'as' => 'leaves.'], function () {
             Route::get('/', [LeaveRequestController::class, 'index'])->name('index');            
             Route::post('/save', [LeaveRequestController::class, 'save'])->name('save');
-
+            Route::post('/approval/{id}', [LeaveRequestController::class, 'approval'])->name('approval');
+            Route::post('/browse/{id}', [LeaveRequestController::class, 'browse'])->name('browse');
             
             Route::get('/edit/{id}', [LeaveRequestController::class, 'edit'])->name('edit');
             Route::post('/edit/{id}', [LeaveRequestController::class, 'saveEdit'])->name('save.edit');

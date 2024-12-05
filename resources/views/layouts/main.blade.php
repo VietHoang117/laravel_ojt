@@ -14,6 +14,7 @@
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="{{ asset('adminlte/dist/img/AdminLTELogo.png')  }}" alt="AdminLTELogo"
                 height="60" width="60">
+
         </div>
 
         <!-- Navbar -->
@@ -22,6 +23,9 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
+            <h1 class="text-white">
+                {{ Auth::user()->name  }}
+            </h1>
             <a href="{{ route('dashboard')  }}" class="brand-link">
                 <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -39,88 +43,88 @@
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_dashboard'))
-                            <a href="{{ route('dashboard')  }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Chấm Công
-                                </p>
-                            </a>
+                                <a href="{{ route('dashboard')  }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Chấm Công
+                                    </p>
+                                </a>
                             @endif
                         </li>
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_user'))
-                            <a href="{{ route('users.users')  }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Tài Khoản
-                                </p>
-                            </a>
+                                <a href="{{ route('users.users')  }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Tài Khoản
+                                    </p>
+                                </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_department'))
-                            <a href="{{ route('departments.index')  }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Phòng ban
-                                </p>
-                            </a>
+                                <a href="{{ route('departments.index')  }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Phòng ban
+                                    </p>
+                                </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_salarylevel'))
-                            <a href="{{ route('salarylevels.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Bậc Lương
-                                </p>
-                            </a>
+                                <a href="{{ route('salarylevels.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Bậc Lương
+                                    </p>
+                                </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_payroll'))
-                            <a href="{{ route('payrolls.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Bảng Lương
-                                </p>
-                            </a>
+                                <a href="{{ route('payrolls.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Bảng Lương
+                                    </p>
+                                </a>
                             @endif
                         </li>
-                        
+
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_justifications'))
-                            <a href="{{ route('justifications.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Duyệt Giải Trình
-                                </p>
-                            </a>
+                                <a href="{{ route('justifications.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Duyệt Giải Trình
+                                    </p>
+                                </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_leaves'))
-                            <a href="{{ route('leaves.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Đề xuất
-                                </p>
-                            </a>
+                                <a href="{{ route('leaves.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Đề xuất
+                                    </p>
+                                </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
                             @if(App\Helpers\PermissionHelper::can('view_configurations'))
-                            <a href="{{ route('configurations.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Cấu Hình Chung
-                                </p>
-                            </a>
+                                <a href="{{ route('configurations.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Cấu Hình Chung
+                                    </p>
+                                </a>
                             @endif
                         </li>
 
