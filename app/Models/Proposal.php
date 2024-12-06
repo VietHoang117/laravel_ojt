@@ -47,16 +47,17 @@ class Proposal extends Model
     {
         return $this->hasMany(Attachment::class, 'proposal_id');
     }
-    
+
 
     public function scopeOwnedByUserGroup($query)
     {
         $user = Auth::user();
-        
+
         if ($user->roles()->where('is_system_role', true)->exists()) {
             return $query;
         } else {
-            return $query->where('user_id', $user->id);
+            return $query->where('user_id', $user->id)
+                    ->orWhere('user_reviewer_id', $user->id);
         };
     }
 }
