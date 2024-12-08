@@ -15,19 +15,18 @@ class Proposal extends Model
         'proposal_type_id',
         'proposal_name',
         'content',
-        'day_off',
         'from_date',
         'to_date',
-        'department_id',
+        'type_of_vacation',
+        'rest_type',
         'user_id',
-        'user_manager_id',
         'user_reviewer_id',
         'status'
     ];
 
     public function type()
     {
-        return $this->belongsTo(ProposalType::class, 'proposal_type_id');
+        return $this->belongsTo(ProposalType::class, 'proposal_type_id', 'type_name');
     }
 
     public function user()

@@ -5,8 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('proposals', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger(column: 'proposal_type_id')->comment('Khóa ngoại đến bảng loại đề xuất');
+            $table->string(column: 'proposal_type_id')->comment('Khóa ngoại đến bảng loại đề xuất');
             $table->string('proposal_name')->comment('Tên đề xuất');
             $table->string('content', 300);
-            $table->date('day_off')->nullable()->comment('Ngày nghỉ');
             $table->date('from_date')->nullable()->comment('Từ ngày');
             $table->date('to_date')->nullable()->comment('Đến ngày');
-            $table->enum(column: 'status',allowed: LeaveStatusEnum::getValues())->default(LeaveStatusEnum::DRAFT); // trang thái nháp, gửi duyệt, từ chối, hoàn thành
+            $table->enum('type_of_vacation', ['Sáng', 'Chiều'])->default('Sáng')->comment('Chọn Loại nghỉ');
+            $table->enum(column: 'status', allowed: LeaveStatusEnum::getValues())->default(LeaveStatusEnum::DRAFT); // trang thái nháp, gửi duyệt, từ chối, hoàn thành
+            $table->enum('rest_type', ['Nghỉ phép', 'Nghỉ không phép'])->default('Nghỉ phép')->comment('Chọn kiểu nghỉ');
             $table->unsignedInteger(column: 'user_id')->comment('Người khởi tạo');
-            $table->unsignedInteger('user_manager_id')->comment('Người quản lý');
             $table->unsignedInteger('user_reviewer_id')->nullable()->comment('Người duyệt');
             $table->timestamps();
         });
@@ -33,14 +32,23 @@ return new class extends Migration
             $table->string('file_name');
             $table->text('file_path');
             $table->timestamps();
-    
+
         });
 
         Schema::create('proposal_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('type_name');
+            $table->string('type_name')->unique();
             $table->timestamps();
         });
+
+
+        DB::table('proposal_types')->insert([
+            [
+                'type_name' => 'Nghỉ toàn ca'
+            ], 
+            [
+                'type_name' => 'Nghỉ nửa ca'
+            ]
+        ]);
 
     }
 

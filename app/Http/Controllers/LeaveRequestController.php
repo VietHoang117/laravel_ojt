@@ -9,8 +9,10 @@ use App\Models\Proposal;
 use App\Models\Attachment;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\LeaveStatusEnum;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-
+use App\Mail\ApprovalMail;
+use Illuminate\Support\Facades\DB;
 
 class LeaveRequestController extends Controller
 {
@@ -21,7 +23,7 @@ class LeaveRequestController extends Controller
 
         // Xây dựng query tìm kiếm
         $data = Proposal::query()
-            ->with(['user', 'type', 'attachments', 'manager', 'reviewer'])
+            ->with(['user', 'type', 'attachments', 'reviewer'])
             ->OwnedByUserGroup();
 
         if (!empty($search)) {
@@ -40,6 +42,24 @@ class LeaveRequestController extends Controller
         $dexuats = ProposalType::all();
         $nguoiquanlys = User::all();
         $status = LeaveStatusEnum::getValues();
+        $type_of_vacations = [
+            (object) [
+                'name' => 'Sáng'
+            ],
+            (object) [
+                'name' => 'Chiều'
+            ]
+        ];
+
+        $rest_types = [
+            (object) [
+                'name' => 'Nghỉ phép'
+            ],
+            (object) [
+                'name' => 'Nghỉ không phép'
+            ]
+        ];
+
 
         return view('admin.leave.index', [
             'data' => $data,
@@ -47,7 +67,9 @@ class LeaveRequestController extends Controller
             'nguoiquanlys' => $nguoiquanlys,
             'status' => $status,
             'leaveStatusEnum' => LeaveStatusEnum::class,
-            'search' => $search, // Trả lại giá trị tìm kiếm cho view
+            'search' => $search,
+            'type_of_vacations' => $type_of_vacations,
+            'rest_types' => $rest_types
         ]);
     }
 
@@ -61,7 +83,8 @@ class LeaveRequestController extends Controller
             'proposal_type_id' => 'required',
             'proposal_name' => 'required',
             'content' => 'required|string',
-            'user_manager_id' => 'required',
+            'from_date' => 'required',
+            'to_date' => 'required'
         ]);
 
 
@@ -74,8 +97,8 @@ class LeaveRequestController extends Controller
             'proposal_type_id',
             'proposal_name',
             'content',
-            'user_manager_id',
-            'day_off',
+            'type_of_vacation',
+            'rest_type',
             'from_date',
             'to_date'
         ]);
@@ -106,11 +129,35 @@ class LeaveRequestController extends Controller
     public function approval(Request $request, $id)
     {
         //validate
-        $data = Proposal::findOrFail($id);
-        if ($data) {
-            $data->update(['user_reviewer_id' => $request->input('approver'), 'status' => LeaveStatusEnum::SEND]);
+        try {
+            DB::beginTransaction();
+
+            $data = Proposal::findOrFail($id);
+            if ($data) {
+                // Cập nhật thông tin người duyệt nhưng chưa commit
+                $data->update(['user_reviewer_id' => $request->input('approver'), 'status' => LeaveStatusEnum::SEND]);
+
+                $approver = User::where('id', $request->input('approver'))->first();
+
+                // Kiểm tra nếu người duyệt tồn tại và có email
+                if ($approver && $approver->email) {
+                    Mail::to($approver->email)->send(new ApprovalMail([
+                        'name' => 'Xin chào ' . $approver->name,
+                        'content' => 'Mày hãy vào duyệt đề xuất xin nghỉ này: ' . $data->proposal_name,
+                        'link' => env('APP_URL') . 'admin/leaves'
+                    ]));
+                } else {
+                    throw new \Exception('Người duyệt không hợp lệ hoặc không có email.');
+                }
+            }
+            DB::commit(); // Commit nếu mọi thứ thành công
+            return back()->with('success', 'Đã cập nhật và gửi email thành công.');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());
         }
-        return back()->with('success', 'Gửi duyệt thành công');
+
     }
 
     public function browse(Request $request, $id)
