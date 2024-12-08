@@ -15,7 +15,7 @@ Tài Khoản
 
     <div class="row">
         <div class="col-md-6 text-left">
-            <h4>Danh Sách Tài Khoản</h4>
+            <h1 style="font-size: 30px; font-weight: bold;">Danh sách tài khoản</h1>
         </div>
         <div class="col-md-6 text-right">
             <a href="{{route('users.store')}}" class="col-md-2 btn btn-block btn-primary float-right">Thêm mới</a>

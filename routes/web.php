@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JustificationController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\ChartController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -133,8 +134,17 @@ Route::group(['middleware' => 'Auth'], function () {
         
     });
 
+    Route::group(['middleware' => ['permission:view_charts|create_charts|edit_charts|delete_charts']], function () {
+        Route::group(['prefix' => 'admin/chart', 'as' => 'charts.'], routes: function () {
+            Route::get('/', [ChartController::class, 'index'])->name('index');
+            Route::post('/save', [ChartController::class, 'save'])->name('save');
+            Route::get('/edit/{id}', [ChartController::class, 'edit'])->name('edit');
+            Route::post('/edit/{id}', [ChartController::class, 'saveEdit'])->name('save.edit');
+            Route::get('/delete/{id}', [ChartController::class, 'delete'])->name('delete');
+            
 
-
+        });
+    });
 
 });
 

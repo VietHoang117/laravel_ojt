@@ -55,6 +55,7 @@ $.widget.bridge('uibutton', $.ui.button)
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 

@@ -6,7 +6,7 @@ Bậc Lương
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 text-left">
-            <h4>Quản Lý Bảng Lương</h4>
+            <h1 style="font-size: 30px; font-weight: bold;">Quản Lý Bảng Lương</h1>
         </div>
         <div class="col-md-6 text-right">
             <a href="{{ route('salarylevels.store') }}" class="col-md-2 btn btn-primary float-right">Thêm Mới</a>

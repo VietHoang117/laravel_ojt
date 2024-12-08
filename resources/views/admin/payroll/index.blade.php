@@ -11,9 +11,9 @@ Bảng Lương
     @endif
     <div class="row">
         <div class="col-md-6 text-left">
-            <h4>Quản Lý Bảng Lương Theo Tháng</h4>
-            <a href="{{ route('export.payrolls') }}" class="btn btn-primary">Export Users</a>
+            <h1 style="font-size: 30px; font-weight: bold;">Quản Lý Bảng Lương Theo Tháng</h1>
 
+            <a href="{{ route('export.payrolls') }}" class="btn btn-primary">Export Users</a>
         </div>
 
         <div class="col-md-6 text-right">

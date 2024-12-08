@@ -2,7 +2,8 @@
 @section('title', 'Đề xuất nghỉ phép')
 
 @section('content')
-    <h1>Đề xuất</h1>
+    <h1 style="font-size: 30px; font-weight: bold;">Đơn Phép</h1>
+
 
     <div class="card-body">
         <form action="{{ route('leaves.save') }}" method="POST" enctype="multipart/form-data">
@@ -141,7 +142,7 @@
                                 data-target="#showFormModal-{{ $value->id }}" title="Hiển thị thông tin chi tiết">
                                 Hiển Thị
                             </button>
-
+                            
                             <!-- Gửi người duyệt -->
                             @if ($value->status === $leaveStatusEnum::DRAFT)
                                 <button type="button" class="btn btn-success" data-toggle="modal"
@@ -150,12 +151,9 @@
                                     Người duyệt
                                 </button>
 
-                                <a href="{{ route('leaves.delete', $value->id) }}" class="btn btn-danger"
-                                    onclick="return confirmDelete()">
-                                    Xóa
-                                </a>
+                                
                             @endif
-
+                        
                             @if ($value->status === $leaveStatusEnum::SEND && Auth::id() === $value->user_reviewer_id)
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                     data-target="#approvalFormModalUser-{{ $value->id }}">
@@ -349,12 +347,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <a href="{{ route('leaves.delete', $value->id) }}" class="btn btn-danger"
+                                    onclick="return confirmDelete()">
+                                    Xóa
+                                </a>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+    <div class="d-flex justify-content-center mt-4">
+        {{ $data->links('pagination::bootstrap-4') }}
+    </div>
+
     <script>
         function toggleDateFields() {
             const select = document.getElementById('type');

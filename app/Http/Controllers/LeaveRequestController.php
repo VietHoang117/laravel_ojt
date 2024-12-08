@@ -34,7 +34,7 @@ class LeaveRequestController extends Controller
             });
         }
 
-        $data = $data->paginate(10);
+        $data = $data->paginate(7);
 
         // Các dữ liệu khác
         $dexuats = ProposalType::all();

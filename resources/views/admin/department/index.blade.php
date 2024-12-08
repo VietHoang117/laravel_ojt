@@ -14,7 +14,7 @@ td.details-control {
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 text-left">
-            <h4>Phòng Ban</h4>
+            <h1 style="font-size: 30px; font-weight: bold;">Phòng Ban</h1>
         </div>
         <div class="col-md-6 text-right">
             <a href="{{route('departments.store')}}" class="col-md-2 btn btn-block btn-primary float-right">Thêm mới</a>

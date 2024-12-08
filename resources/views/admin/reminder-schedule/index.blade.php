@@ -6,7 +6,7 @@ Danh sách mail
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 text-left">
-            <h4>Danh sách cấu hình email</h4>
+            <h1 style="font-size: 30px; font-weight: bold;">Danh sách cấu hình email</h1>
         </div>
         <div class="col-md-6 text-right">
             <a href="{{ route('configurations.store') }}" class="col-md-2 btn btn-primary float-right">Thêm Mới</a>

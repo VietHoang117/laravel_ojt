@@ -127,6 +127,16 @@
                                 </a>
                             @endif
                         </li>
+                        <li class="nav-item">
+                            @if(App\Helpers\PermissionHelper::can('view_charts'))
+                                <a href="{{ route('charts.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Biểu Đồ
+                                    </p>
+                                </a>
+                            @endif
+                        </li>
 
                     </ul>
                 </nav>

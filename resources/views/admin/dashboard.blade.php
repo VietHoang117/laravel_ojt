@@ -164,6 +164,10 @@
             <div class="my-8"></div>
 
             @if (App\Helpers\PermissionHelper::can('is-system-admin'))
+
+                <div class="col-md-12 text-left">
+                    <h1 style="font-size: 30px; font-weight: bold;">Danh sách chấm công tất cả nhân viên</h1>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <form method="get" action="{{ route('search') }}">
@@ -174,9 +178,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-md-12 text-left">
-                    <h1>Danh sách chấm công tất cả nhân viên</h1>
-                </div>
+                
                 <div class="card-body">
                     <table id="example3" class="table table-bordered table-hover">
                         <thead>
