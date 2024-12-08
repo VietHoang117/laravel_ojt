@@ -12,6 +12,7 @@ use App\Enums\LeaveStatusEnum;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\ApprovalMail;
+use App\Mail\FeedbackMail;
 use Illuminate\Support\Facades\DB;
 
 class LeaveRequestController extends Controller
@@ -172,14 +173,15 @@ class LeaveRequestController extends Controller
             DB::beginTransaction();
             // Cập nhật trạng thái
             $data->update(['status' => $request->input('browse')]);
-            $approver = User::where('id', $request->input('approver'))->first();
+
+            $user = User::where('id', $data->user_id)->first();
             
-            if ($approver && $approver->email) {
-                Mail::to($approver->email)->send(new ApprovalMail([
-                    'name' => 'Xin chào ' . $approver->name,
-                    'content' => 'Mày hãy vào duyệt đề xuất xin nghỉ này: ' . $data->proposal_name,
-                    'link' => env('APP_URL') . 'admin/leaves'
+            if ($user && $user->email) {
+                Mail::to($user->email)->send(new FeedbackMail([
+                    'name' => 'Xin chào ' . $user->name,
+                    'content' => $data->proposal_name . '- đơn này đã được ' . $request->input('browse')
                 ]));
+
             } else {
                 throw new \Exception('Người duyệt không hợp lệ hoặc không có email.');
             }
@@ -190,9 +192,7 @@ class LeaveRequestController extends Controller
             DB::rollBack();
             return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());
         }   
-        
-
-        return back()->with('success', 'Đã gửi thành công');
+    
     }
 
     public function delete($id)
