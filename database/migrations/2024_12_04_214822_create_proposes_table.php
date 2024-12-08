@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('content', 300);
             $table->date('from_date')->nullable()->comment('Từ ngày');
             $table->date('to_date')->nullable()->comment('Đến ngày');
-            $table->enum('type_of_vacation', ['Sáng', 'Chiều'])->default('Sáng')->comment('Chọn Loại nghỉ');
+            $table->enum('type_of_vacation', ['Sáng', 'Chiều'])->default('Sáng')->nullable()->comment('Chọn Loại nghỉ');
             $table->enum(column: 'status', allowed: LeaveStatusEnum::getValues())->default(LeaveStatusEnum::DRAFT); // trang thái nháp, gửi duyệt, từ chối, hoàn thành
             $table->enum('rest_type', ['Nghỉ phép', 'Nghỉ không phép'])->default('Nghỉ phép')->comment('Chọn kiểu nghỉ');
             $table->unsignedInteger(column: 'user_id')->comment('Người khởi tạo');
