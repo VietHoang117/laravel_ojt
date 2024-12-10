@@ -12,7 +12,7 @@
     <div class="wrapper">
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('adminlte/dist/img/AdminLTELogo.png')  }}" alt="AdminLTELogo"
+            <img class="animation__shake" src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
                 height="60" width="60">
 
         </div>
@@ -52,98 +52,108 @@
                             with font-awesome or any other icon font library -->
 
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_dashboard'))
-                                <a href="{{ route('dashboard')  }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Chấm Công
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_dashboard'))
+                                <a href="{{ route('dashboard') }}"
+                                    class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-clock"></i>
+                                    <p>Chấm Công</p>
                                 </a>
                             @endif
                         </li>
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_user'))
-                                <a href="{{ route('users.users')  }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Tài Khoản
-                                    </p>
-                                </a>
-                            @endif
-                        </li>
-
-                        <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_department'))
-                                <a href="{{ route('departments.index')  }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Phòng ban
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_user'))
+                                <a href="{{ route('users.users') }}"
+                                    class="nav-link {{ request()->routeIs('users.users') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user"></i>
+                                    <p>Tài Khoản</p>
                                 </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_salarylevel'))
-                                <a href="{{ route('salarylevels.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Bậc Lương
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_department'))
+                                <a href="{{ route('departments.index') }}"
+                                    class="nav-link {{ request()->routeIs('departments.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-building"></i>
+                                    <p>Phòng Ban</p>
                                 </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_payroll'))
-                                <a href="{{ route('payrolls.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Bảng Lương
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_salarylevel'))
+                                <a href="{{ route('salarylevels.index') }}"
+                                    class="nav-link {{ request()->routeIs('salarylevels.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-money-check-alt"></i>
+                                    <p>Bậc Lương</p>
                                 </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_justifications'))
-                                <a href="{{ route('justifications.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Duyệt Giải Trình
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_payroll'))
+                                <a href="{{ route('payrolls.index') }}"
+                                    class="nav-link {{ request()->routeIs('payrolls.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                    <p>Bảng Lương</p>
                                 </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_leaves'))
-                                <a href="{{ route('leaves.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Đề xuất
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_justifications'))
+                                <a href="{{ route('justifications.index') }}"
+                                    class="nav-link {{ request()->routeIs('justifications.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-balance-scale"></i>
+                                    <p>Duyệt Giải Trình</p>
                                 </a>
                             @endif
                         </li>
 
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_configurations'))
-                                <a href="{{ route('configurations.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Cấu Hình Chung
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_leaves'))
+                                <a href="{{ route('leaves.index') }}"
+                                    class="nav-link {{ request()->routeIs('leaves.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-paper-plane"></i>
+                                    <p>Đề Xuất</p>
                                 </a>
                             @endif
                         </li>
+
+                        <li
+                            class="nav-item has-treeview {{ request()->routeIs('configurations.*') ? 'menu-open' : '' }}">
+                            <a href="#"
+                                class="nav-link {{ request()->routeIs('configurations.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>
+                                    Cấu Hình Chung
+                                    <i class="nav-arrow fas fa-angle-right rotate-icon"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('configurations.index') }}"
+                                        class="nav-link {{ request()->routeIs('configurations.index') ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-envelope"></i>
+                                        <p>Cấu Hình Mail</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-tools"></i>
+                                        <p>Cấu Hình Khác</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
                         <li class="nav-item">
-                            @if(App\Helpers\PermissionHelper::can('view_charts'))
-                                <a href="{{ route('charts.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Biểu Đồ
-                                    </p>
+                            @if (App\Helpers\PermissionHelper::can('view_charts'))
+                                <a href="{{ route('charts.index') }}"
+                                    class="nav-link {{ request()->routeIs('charts.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-chart-pie"></i>
+                                    <p>Biểu Đồ</p>
                                 </a>
                             @endif
                         </li>

@@ -2,7 +2,7 @@
 @section('title', 'Đề xuất nghỉ phép')
 
 @section('content')
-<h1 style="font-size: 30px; font-weight: bold;">Đơn Phép</h1>
+    <h1 style="font-size: 30px; font-weight: bold;">Đơn Phép</h1>
 
 
 <div class="card-body">
