@@ -84,8 +84,8 @@ class LeaveRequestController extends Controller
             'proposal_type_id' => 'required',
             'proposal_name' => 'required',
             'content' => 'required|string',
-            'from_date' => 'required',
-            'to_date' => 'required'
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
         ]);
 
 
@@ -175,13 +175,12 @@ class LeaveRequestController extends Controller
             $data->update(['status' => $request->input('browse')]);
 
             $user = User::where('id', $data->user_id)->first();
-            
+
             if ($user && $user->email) {
                 Mail::to($user->email)->send(new FeedbackMail([
                     'name' => 'Xin chào ' . $user->name,
-                    'content' => $data->proposal_name . '- đơn này đã được ' . $request->input('browse')
+                    'content' => $data->proposal_name . '- đơn này đã được: ' . $request->input('browse')
                 ]));
-
             } else {
                 throw new \Exception('Người duyệt không hợp lệ hoặc không có email.');
             }
@@ -191,8 +190,7 @@ class LeaveRequestController extends Controller
 
             DB::rollBack();
             return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());
-        }   
-    
+        }
     }
 
     public function delete($id)
