@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendProposalFeedbackEmail;
+use App\Models\LeaveBalance;
 use App\Models\ProposalType;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,6 +16,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Mail\ApprovalMail;
 use App\Mail\FeedbackMail;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LeaveRequestController extends Controller
 {
@@ -61,6 +65,13 @@ class LeaveRequestController extends Controller
             ]
         ];
 
+        $userId = Auth::id();
+        $ngayPheps = LeaveBalance::query()
+            ->where('user_id', $userId)
+            ->where('year', now()->year)
+            ->first();
+
+
 
         return view('admin.leave.index', [
             'data' => $data,
@@ -70,7 +81,8 @@ class LeaveRequestController extends Controller
             'leaveStatusEnum' => LeaveStatusEnum::class,
             'search' => $search,
             'typeOfVacations' => $type_of_vacations,
-            'restTypes' => $rest_types
+            'restTypes' => $rest_types,
+            'ngayPheps' => $ngayPheps
         ]);
     }
 
@@ -136,6 +148,7 @@ class LeaveRequestController extends Controller
             $data = Proposal::findOrFail($id);
             if ($data) {
                 // Cập nhật thông tin người duyệt nhưng chưa commit
+
                 $data->update(['user_reviewer_id' => $request->input('approver'), 'status' => LeaveStatusEnum::SEND]);
 
                 $approver = User::where('id', $request->input('approver'))->first();
@@ -159,44 +172,88 @@ class LeaveRequestController extends Controller
             return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());
         }
     }
-
+    
     public function browse(Request $request, $id)
     {
-        //validate
+        // Validate and find proposal
         $data = Proposal::findOrFail($id);
-
-        // Kiểm tra quyền trực tiếp
+    
+        // Kiểm tra quyền duyệt
         if ($data->user_reviewer_id !== Auth::id()) {
             return back()->with('error', 'Bạn không có quyền duyệt');
         }
+    
         try {
             DB::beginTransaction();
-            // Cập nhật trạng thái
-            $data->update(['status' => $request->input('browse')]);
-
-            $user = User::where('id', $data->user_id)->first();
-
-            if ($user && $user->email) {
-                Mail::to($user->email)->send(new FeedbackMail([
-                    'name' => 'Xin chào ' . $user->name,
-                    'content' => $data->proposal_name . '- đơn này đã được: ' . $request->input('browse')
-                ]));
-            } else {
-                throw new \Exception('Người duyệt không hợp lệ hoặc không có email.');
+    
+            // Cập nhật trạng thái nếu là Nghỉ phép
+            if ($data->rest_type === 'Nghỉ phép') {
+                $leaveBalance = LeaveBalance::query()
+                    ->where('user_id', $data->user_id)
+                    ->where('remaining_leaves', '>', 0)
+                    ->where('year', now()->year)
+                    ->first();
+    
+                $soNgayNghi = $this->calculateLeaveDays($data->from_date, $data->to_date);
+    
+                // Kiểm tra và cập nhật số ngày nghỉ
+                if ($leaveBalance && $soNgayNghi > 0) {
+                    $leaveBalance->update([
+                        'total_leaves' => $leaveBalance->total_leaves - $soNgayNghi,
+                        'used_leaves' => $leaveBalance->used_leaves + $soNgayNghi,
+                        'remaining_leaves' => $leaveBalance->remaining_leaves - $soNgayNghi,
+                    ]);
+                    // Cập nhật trạng thái đơn
+                    $data->updateOrFail(['status' => $request->input('browse')]);
+                } else {
+                    $data->updateOrFail(['status' => LeaveStatusEnum::REFUSE]);
+                }
             }
+    
+            // Gửi email cho người dùng nếu có email hợp lệ
+            $user = $data->user;
+    
+            if ($user && $user->email) {
+                $data = [
+                    'name' => 'Xin chào ' . $user->name,
+                    'content' => $user->proposal_name . ' - Đơn này đã được: ' . $data->status
+                ];
+                SendProposalFeedbackEmail::dispatch($user, $data);
+            } else {
+                Log::error('Error updating leave proposal: ' . 'Người duyệt không hợp lệ hoặc không có email.');
+            }
+    
             DB::commit(); // Commit nếu mọi thứ thành công
             return back()->with('success', 'Đã cập nhật và gửi email thành công.');
         } catch (\Exception $e) {
-
-            DB::rollBack();
+            // Log lỗi để có thể theo dõi
+            Log::error('Error updating leave proposal: ' . $e->getMessage());
+    
+            DB::rollBack(); // Rollback nếu có lỗi
             return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());
         }
-    }
+    }    
 
     public function delete($id)
     {
         $data = Proposal::query()->findOrFail($id);
         $data->delete();
         return back()->with('success', 'Xóa thành công!');
+    }
+
+    private function calculateLeaveDays($startDate, $endDate)
+    {
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
+        if ($start > $end) {
+            return 0; // Trả về 0 nếu ngày bắt đầu lớn hơn ngày kết thúc
+        }
+
+        // Tính số ngày nghỉ giữa 2 ngày
+        $days = $start->diffInDays($end) + 1; // +1 để tính cả ngày bắt đầu
+
+        return $days;
     }
 }

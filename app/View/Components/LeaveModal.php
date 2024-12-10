@@ -16,6 +16,7 @@ class LeaveModal extends Component
         public $dexuats,
         public $restTypes,
         public $typeOfVacations,
+        public $ngayPheps
     ) {
 
     }

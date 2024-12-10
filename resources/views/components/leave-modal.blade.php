@@ -33,13 +33,13 @@
                     </div>
                     <div class="form-group">
                         <p>
-                            Số phép đã nghỉ:
+                            Số phép đã nghỉ: {{ $ngayPheps->used_leaves ?? 0 }}
                         </p>
                         <p>
-                            Tổng số phép trong năm:11
+                            Tổng số phép trong năm: {{ $ngayPheps->total_leaves ?? 0 }}
                         </p>
                         <p>
-                            Số phép còn lại:4
+                            Số phép còn lại: {{ $ngayPheps->remaining_leaves ?? 0 }}
                         </p>
                     </div>
                     <div class="form-group">
