@@ -69,8 +69,8 @@ class LeaveRequestController extends Controller
             'status' => $status,
             'leaveStatusEnum' => LeaveStatusEnum::class,
             'search' => $search,
-            'type_of_vacations' => $type_of_vacations,
-            'rest_types' => $rest_types
+            'typeOfVacations' => $type_of_vacations,
+            'restTypes' => $rest_types
         ]);
     }
 

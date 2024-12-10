@@ -23,13 +23,23 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <h1 class="text-white">
-                {{ Auth::user()->name  }}
-            </h1>
-            <a href="{{ route('dashboard')  }}" class="brand-link">
-                <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-            </a>
+            <div class="user-info text-center p-3 bg-dark rounded">
+                <a href="{{ route('dashboard') }}" class="brand-link d-inline-flex align-items-center">
+                    <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
+                        class="brand-image img-circle elevation-3 me-2">
+                    <p>Quản Lý Nhân Sự</p>
+                </a>
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-start">
+                <h1 class="text-white mb-2 mx-auto font-weight-bold">
+                    {{ Auth::user()->name }}
+                </h1>
+                <!-- <p class="text-white-50 mb-0" style="font-size: 1rem;">
+                    Welcome to your dashboard -->
+                <!-- </p> -->
+            </div>
+
+
 
             <!-- Sidebar -->
 
