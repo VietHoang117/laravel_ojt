@@ -23,7 +23,9 @@ class User extends Authenticatable
         'password',
         'phone_number',
         'position',
-        'department_id'
+        'department_id',
+        'date_of_birth',
+        'gender'
     ];
   
     public function department()

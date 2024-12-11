@@ -36,8 +36,10 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' =>'required',
             'phone_number'=>'required',
-            'role_id' => 'required'
-            // 'position'=>'required',
+            'role_id' => 'required',
+            'date_of_birth'=>'required',
+            'gender' => 'required'
+            
         ]);
 
         if ($validator->fails()) {
@@ -51,7 +53,9 @@ class UserController extends Controller
             'password',
             'phone_number',
             'department_id',
-            'role_id'
+            'role_id',
+            'date_of_birth',
+            'gender'
         ]);
 
         if (empty($inputs['department_id'])) {
@@ -83,7 +87,8 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' =>'nullable|min:8',
             'phone_number'=>'required',
-            // 'position'=>'required',
+            'date_of_birth'=>'required',
+            'gender' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -97,6 +102,8 @@ class UserController extends Controller
             'password',
             'phone_number',
             'department_id',
+            'date_of_birth',
+            'gender'
         ]);
 
         if ($request->filled('password')) {
