@@ -172,20 +172,20 @@ class LeaveRequestController extends Controller
             return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());
         }
     }
-    
+
     public function browse(Request $request, $id)
     {
         // Validate and find proposal
         $data = Proposal::findOrFail($id);
-    
+
         // Kiểm tra quyền duyệt
         if ($data->user_reviewer_id !== Auth::id()) {
             return back()->with('error', 'Bạn không có quyền duyệt');
         }
-    
+
         try {
             DB::beginTransaction();
-    
+
             // Cập nhật trạng thái nếu là Nghỉ phép
             if ($data->rest_type === 'Nghỉ phép') {
                 $leaveBalance = LeaveBalance::query()
@@ -193,9 +193,9 @@ class LeaveRequestController extends Controller
                     ->where('remaining_leaves', '>', 0)
                     ->where('year', now()->year)
                     ->first();
-    
+
                 $soNgayNghi = $this->calculateLeaveDays($data->from_date, $data->to_date);
-    
+
                 // Kiểm tra và cập nhật số ngày nghỉ
                 if ($leaveBalance && $soNgayNghi > 0) {
                     $leaveBalance->update([
@@ -208,11 +208,13 @@ class LeaveRequestController extends Controller
                 } else {
                     $data->updateOrFail(['status' => LeaveStatusEnum::REFUSE]);
                 }
+            } else {
+                $data->updateOrFail(['status' => $request->input('browse')]);
             }
-    
+
             // Gửi email cho người dùng nếu có email hợp lệ
             $user = $data->user;
-    
+
             if ($user && $user->email) {
                 $data = [
                     'name' => 'Xin chào ' . $user->name,
@@ -222,17 +224,17 @@ class LeaveRequestController extends Controller
             } else {
                 Log::error('Error updating leave proposal: ' . 'Người duyệt không hợp lệ hoặc không có email.');
             }
-    
+
             DB::commit(); // Commit nếu mọi thứ thành công
             return back()->with('success', 'Đã cập nhật và gửi email thành công.');
         } catch (\Exception $e) {
             // Log lỗi để có thể theo dõi
             Log::error('Error updating leave proposal: ' . $e->getMessage());
-    
+
             DB::rollBack(); // Rollback nếu có lỗi
             return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());
         }
-    }    
+    }
 
     public function delete($id)
     {
