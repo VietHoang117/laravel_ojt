@@ -24,13 +24,13 @@
                 <select class="form-control" name="user_id" id="user_id" required>
                     <option value="" disabled selected>--- Chọn người dùng ---</option>
                     @foreach ($users as $user)
-                        <option value="{{ $user->id }}">
+                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                             {{ $user->name }}
                         </option>
                     @endforeach
                 </select>
             </div>
-
+            
             <!-- Input tên bậc lương -->
             <div class="form-group">
                 <label for="level_name">Tên Bậc Lương:</label>

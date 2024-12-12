@@ -29,7 +29,12 @@ class PayrollController extends Controller
     public function store(Request $request)
     {
         $users = User::select('id', 'name')->get();
-        return view('admin.payroll.create', ['users' => $users]);
+        $salaryLevels = SalaryLevel::select('id', 'level_name')->get();
+
+        return view('admin.payroll.create', [
+            'users' => $users,
+            'salaryLevels' => $salaryLevels,
+        ]);
     }
 
 
@@ -46,11 +51,9 @@ class PayrollController extends Controller
         }
 
         $inputs = $request->only([
-            'name' => $request->input('name'),
-            'level_name' => $request->input('level_name'),
+            'name',
+            'level_name',
         ]);
-
-        $inputs['processed_by'] = auth()->id();
 
         $payroll = Payroll::create($inputs);
 
@@ -223,8 +226,6 @@ class PayrollController extends Controller
                 ];
 
                 PayRoll::updateOrCreate($attributesDay, values: $valuesDay);
-
-
             }
         }
 
@@ -239,7 +240,8 @@ class PayrollController extends Controller
         return back()->with('success', 'Xóa thành công!');
     }
 
-    public function exportPayrolls(){
+    public function exportPayrolls()
+    {
         return Excel::download(new PayrollExport, 'payrolls.xlsx');
     }
 }
