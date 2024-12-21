@@ -1,4 +1,3 @@
-
 <form action="{{ route('leaves.save') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <!-- Modal -->
@@ -15,12 +14,25 @@
                 <div class="modal-body">
                     <div class="form-group col-8">
                         <label for="type" class="form-label">Loại đề xuất</label>
-                        <select class="form-select" id="type" name="proposal_type_id" onchange="toggleDateFields()">
+                        <select class="form-select" id="type" name="proposal_type_id"
+                            onchange="toggleDateFields()">
                             <option value="">Chọn loại đề xuất</option>
                             @foreach ($dexuats as $item)
                                 <option value="{{ $item->type_name }}">{{ $item->type_name }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div id="date-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="type" class="form-label">Loại nghỉ</label>
+                            <select class="form-select" id="type" name="type_of_vacation"
+                                onchange="toggleDateFields()">
+                                <option value="">Chọn loại đề xuất</option>
+                                @foreach ($typeOfVacations as $item)
+                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group col-8">
                         <label for="type" class="form-label">Chọn kiểu nghỉ</label>
@@ -52,17 +64,7 @@
                         <textarea class="form-control" id="content" name="content"></textarea>
                     </div>
 
-                    <div id="date-fields" style="display: none;">
-                        <div class="form-group">
-                            <label for="type" class="form-label">Loại nghỉ</label>
-                            <select class="form-select" id="type" name="type_of_vacation" onchange="toggleDateFields()">
-                                <option value="">Chọn loại đề xuất</option>
-                                @foreach ($typeOfVacations as $item)
-                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+
                     <div>
                         <div class="form-group">
                             <label for="from_date" class="col-form-label">Từ ngày:</label>
