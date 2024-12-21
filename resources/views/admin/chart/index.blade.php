@@ -24,6 +24,11 @@ Biểu đồ
             <canvas id="employeesRatioChart4"></canvas>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <canvas id="employeesRatioChart5"></canvas>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
@@ -186,6 +191,41 @@ Biểu đồ
         }
     });
 
+    var usersNames = {!! json_encode($userNames) !!};
+    var payroll = {!! json_encode($payrolls) !!};
+    
+    
+    new Chart("employeesRatioChart5", {
+        type: "bar",
+        data: {
+            labels: usersNames,
+            datasets: [
+                {
+                    label: "Lương",
+                    backgroundColor: "blue",
+                    data: payroll
+                },
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            legend: {
+                display: true
+            },
+            title: {
+                display: true,
+                text: "Biểu đồ lương"
+            }
+
+        }
+    });
 
 </script>
 

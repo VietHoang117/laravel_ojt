@@ -6,6 +6,7 @@ use App\Enums\AttendanceStatusEnum;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
+use App\Models\Payroll;
 use Carbon\Carbon;
 use DB;
 
@@ -85,7 +86,7 @@ class ChartController extends Controller
             }
         }
         $dataUsers = $this->users();
-
+        $dataPayroll = $this->payroll();
         return view('admin.chart.index', [
             'datas' => $datas,
             'values' => $dataValues,
@@ -99,7 +100,7 @@ class ChartController extends Controller
             'userNames' => $dataUsers['userNames'],
             'userValids' => $dataUsers['userValids'],
             'userNoValids' => $dataUsers['userNoValids'],
-
+            'payrolls' => $dataPayroll['payrolls'],
         ]);
     }
 
@@ -113,24 +114,24 @@ class ChartController extends Controller
     {
         $firstDayOfMonth = Carbon::now()->startOfMonth()->toDateString();
 
-    
+
         $users = User::with(['attendances' => function ($query) use ($firstDayOfMonth) {
             // truy vấn theo từng phong ban nếu có request gửi lên phong ban
             // truy vấn theo tháng
-            
+
         }])
-        ->get();
+            ->get();
         $userNames = [];
         $userValids = [];
         $userNoValids = [];
 
         foreach ($users as $user) {
             $userNames[] = $user->name;
-        
+
             $userValids[] = optional($user->attendances)
                 ->where('status', AttendanceStatusEnum::VALID)
                 ->count() ?? 0;
-        
+
             $userNoValids[] = optional($user->attendances)
                 ->where('status', AttendanceStatusEnum::INVALID)
                 ->count() ?? 0;
@@ -140,6 +141,30 @@ class ChartController extends Controller
             'userNames' => $userNames,
             'userValids' => $userValids,
             'userNoValids' => $userNoValids
+        ];
+    }
+
+    private function payroll()
+    {
+        $users = User::with(['payrolls'])
+            ->get();
+        $userNames = [];
+        $payrolls = [];
+
+
+        foreach ($users as $user) {
+            $userNames[] = $user->name;
+
+            $payroll = optional($user->payrolls)
+                ->where('type', 'month')
+                ->first();
+
+            $payrolls[] = $payroll->salary_received ?? 0;
+        }
+        // dd($payrolls);
+        return [
+            'userNames' => $userNames,
+            'payrolls' => $payrolls,
         ];
     }
 }

@@ -51,7 +51,7 @@ class User extends Authenticatable
     }
 
     public function payrolls() {
-        return $this->belongsToMany(Payroll::class, 'payroll_user');
+        return $this->hasMany(Payroll::class );
     }
 
     public function attendances() {
