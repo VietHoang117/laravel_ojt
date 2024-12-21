@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AttendanceStatusEnum;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
 use Carbon\Carbon;
+use DB;
 
 class ChartController extends Controller
 {
     public function index()
     {
         $data = Department::with('users')->get();
-
         $datas = [];
         $dataValues = [];
         $dataColors = [];
@@ -49,7 +50,7 @@ class ChartController extends Controller
                 $kxd = 0;
 
                 foreach ($userGroup as $user) {
-                
+
                     $tuoi = Carbon::parse($user->date_of_birth)->age ?? 0;
                     if ($tuoi >= 18 && $tuoi <= 30) {
                         $tuoi30++;
@@ -78,11 +79,13 @@ class ChartController extends Controller
                 $tuoi3040[] = $tuoi40;
                 $tren[] = $tren40;
 
-                $namS [] = $nam;
-                $nuS [] = $nu;
-                $kxdS [] = $kxd;
+                $namS[] = $nam;
+                $nuS[] = $nu;
+                $kxdS[] = $kxd;
             }
         }
+        $dataUsers = $this->users();
+
         return view('admin.chart.index', [
             'datas' => $datas,
             'values' => $dataValues,
@@ -92,7 +95,11 @@ class ChartController extends Controller
             'tren' => $tren,
             'namS' => $namS,
             'nuS' =>  $nuS,
-            'kxdS' => $kxdS
+            'kxdS' => $kxdS,
+            'userNames' => $dataUsers['userNames'],
+            'userValids' => $dataUsers['userValids'],
+            'userNoValids' => $dataUsers['userNoValids'],
+
         ]);
     }
 
@@ -102,5 +109,37 @@ class ChartController extends Controller
     }
 
 
+    private function users()
+    {
+        $firstDayOfMonth = Carbon::now()->startOfMonth()->toDateString();
 
+    
+        $users = User::with(['attendances' => function ($query) use ($firstDayOfMonth) {
+            // truy vấn theo từng phong ban nếu có request gửi lên phong ban
+            // truy vấn theo tháng
+            
+        }])
+        ->get();
+        $userNames = [];
+        $userValids = [];
+        $userNoValids = [];
+
+        foreach ($users as $user) {
+            $userNames[] = $user->name;
+        
+            $userValids[] = optional($user->attendances)
+                ->where('status', AttendanceStatusEnum::VALID)
+                ->count() ?? 0;
+        
+            $userNoValids[] = optional($user->attendances)
+                ->where('status', AttendanceStatusEnum::INVALID)
+                ->count() ?? 0;
+        }
+
+        return [
+            'userNames' => $userNames,
+            'userValids' => $userValids,
+            'userNoValids' => $userNoValids
+        ];
+    }
 }

@@ -19,6 +19,11 @@ Biểu đồ
             <canvas id="employeesRatioChart3"></canvas>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <canvas id="employeesRatioChart4"></canvas>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
@@ -39,11 +44,14 @@ Biểu đồ
         options: {
             scales: {
                 y: {
-                    beginAtZero: false,
+                    beginAtZero: true,
                     ticks: {
                         stepSize: 1
                     }
                 }
+            },
+            legend: {
+                display: true
             },
             title: {
                 display: true,
@@ -131,6 +139,48 @@ Biểu đồ
             title: {
                 display: true,
                 text: "Giới tính theo phòng ban"
+            }
+
+        }
+    });
+
+    var usersNames = {!! json_encode($userNames) !!};
+    var valids = {!! json_encode($userValids) !!};
+    var inValids = {!! json_encode($userNoValids) !!};
+
+
+    new Chart("employeesRatioChart4", {
+        type: "bar",
+        data: {
+            labels: usersNames,
+            datasets: [
+                {
+                    label: "Hợp lệ",
+                    backgroundColor: "blue",
+                    data: valids
+                },
+                {
+                    label: "Không hợp lệ",
+                    backgroundColor: "red",
+                    data: inValids
+                }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            legend: {
+                display: true
+            },
+            title: {
+                display: true,
+                text: "Biểu đồ chấm công"
             }
 
         }
