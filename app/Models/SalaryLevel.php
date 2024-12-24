@@ -12,7 +12,6 @@ class SalaryLevel extends Model
         'user_id',
         'level_name',
         'daily_rate',
-        'monthly_rate'
     ];
 
     public function user()

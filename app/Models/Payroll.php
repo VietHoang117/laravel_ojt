@@ -12,6 +12,7 @@ class Payroll extends Model
         'valid_workdays',
         'invalid_workdays',
         'month',
+        'leave_without_leave',
         'salary_received',
         'type',
         'processed_by'

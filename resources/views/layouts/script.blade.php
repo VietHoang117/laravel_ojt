@@ -1,10 +1,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="{{ asset( 'adminlte/plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-$.widget.bridge('uibutton', $.ui.button)
+    $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
 <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -56,12 +56,15 @@ $.widget.bridge('uibutton', $.ui.button)
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
 <script>
-
-
-
-function confirmDelete() {
-    return confirm('Bạn có chắc chắn muốn xóa không?');
-}
+    function confirmDelete() {
+        return confirm('Bạn có chắc chắn muốn xóa không?');
+    }
+    $(document).ready(function () {
+        $('.select2').select2({
+            placeholder: "Choose users...",
+            allowClear: true
+        });
+    });
 </script>

@@ -161,12 +161,14 @@ class LeaveRequestController extends Controller
                         'link' => env('APP_URL') . 'admin/leaves'
                     ]));
                 } else {
-                    throw new \Exception('Người duyệt không hợp lệ hoặc không có email.');
+                    Log::error('Không có email!');
                 }
             }
             DB::commit(); // Commit nếu mọi thứ thành công
             return back()->with('success', 'Đã cập nhật và gửi email thành công.');
         } catch (\Exception $e) {
+
+            Log::error('Không thể gửi email hoặc cập nhật: '. $e->getMessage());
 
             DB::rollBack();
             return back()->with('error', 'Không thể gửi email hoặc cập nhật: ' . $e->getMessage());

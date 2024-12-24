@@ -41,6 +41,7 @@ Bảng Lương
                         <th>Tháng</th>
                         <th>Số Ngày Công Hợp Lệ</th>
                         <th>Số Ngày Công Không Hợp Lệ</th>
+                        <th>Số nghỉ không phép</th>
                         <th>Lương Nhận Được</th>
                         <th>Hành Động</th>
 
@@ -56,6 +57,7 @@ Bảng Lương
                             <td>{{ $value->month }}</td>
                             <td>{{ $value->valid_workdays }}</td>
                             <td>{{ $value->invalid_workdays }}</td>
+                            <td>{{ $value->leave_without_leave }}</td>
                             <td>{{ number_format($value->salary_received, 0) }} VND</td>
                             <td>
                                 <a href="{{ route('payrolls.edit', $value->id) }}" class="btn btn-success">Sửa</a>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LeaveStatusEnum;
 use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Models\User;
@@ -20,7 +21,7 @@ class PayrollController extends Controller
     {
 
         $data = Payroll::with(['user', 'user.department', 'salarylevel'])
-            ->where('type', 'month')
+            ->where('type', 'day')
             ->paginate(4);
 
         return view('admin.payroll.index', ['data' => $data]);
@@ -162,12 +163,17 @@ class PayrollController extends Controller
                 'attendances' => function ($query) use ($year, $month) {
                     $query->where('status', AttendanceStatusEnum::VALID)
                         ->whereBetween('check_in', [
-                            Carbon::create($year, $month, 1)->startOfMonth(),
-                            Carbon::create($year, $month, 1)->endOfMonth(),
+                            Carbon::create($year, $month, day: 1)->startOfMonth(),
+                            Carbon::create($year, $month, day: 1)->endOfMonth(),
                         ]);
                 },
                 'salaryLevel'
             ])
+            ->with('proposals', function ($query) use ($year, $month) {
+                $query->where('rest_type', 'Nghỉ không phép')
+                    ->where('status', LeaveStatusEnum::ACCEPT)
+                    ->where('from_date', '>=', Carbon::create($year, $month, day: 1)->startOfMonth());
+            })
             ->get();
 
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
@@ -182,35 +188,40 @@ class PayrollController extends Controller
             $startDate->addDay();
         }
 
-
         foreach ($users as $user) {
             $validWorkdays = $user->attendances->count();
-
+            $leaveWithoutLeave = 0;
             if ($user->salaryLevel) {
-                $monthlyRate = $user->salaryLevel->monthly_rate;
+
+                if ($validWorkdays === 0) {
+                    $validWorkdays = 0;
+                    $salaryReceivedDay = 0;
+                } else {
+                    if ($user->proposals) {
+                        foreach ($user->proposals as $proposal) {
+                            if ($proposal->proposal_type_id === 'Nghỉ toàn ca') {
+                                $from = Carbon::parse($proposal->from_date);
+                                $to = Carbon::parse($proposal->to_date);
+                                $days = $to->diffInDays($from);
+                                if ($days > 0) {
+                                    $leaveWithoutLeave = $days;
+                                    $validWorkdays = $validWorkdays - $leaveWithoutLeave;
+                                }
+                            }
+    
+                            if ($proposal->proposal_type_id === 'Nghỉ nửa ca') {
+                                $validWorkdays = $validWorkdays - 0.5;
+                                $leaveWithoutLeave = $leaveWithoutLeave - 0.5;
+                            }
+                        }
+                    }
+                }
+
                 $dailyRate = $user->salaryLevel->daily_rate;
 
-                $salaryReceivedMonth = ($validWorkdays / $workingDays) * $monthlyRate; // Lương theo tháng
                 $salaryReceivedDay = $validWorkdays * $dailyRate; // Lương theo ngày
+              
 
-                // Điều kiện tìm kiếm bản ghi đã tồn tại
-                $attributesMonth = [
-                    'user_id' => $user->id,
-                    'month' => "$month-$year",
-                    'type' => 'month',
-                ];
-
-                // Dữ liệu để cập nhật hoặc thêm mới
-                $valuesMonth = [
-                    'valid_workdays' => $validWorkdays,
-                    'invalid_workdays' => $workingDays - $validWorkdays,
-                    'salary_received' => $salaryReceivedMonth,
-                    'processed_by' => Auth::id(),
-                    'updated_at' => now('Asia/Ho_Chi_Minh'), // Chỉ định múi giờ Việt Nam
-                ];
-
-                // Tạo hoặc cập nhật bản ghi
-                PayRoll::updateOrCreate($attributesMonth, $valuesMonth);
                 $attributesDay = [
                     'user_id' => $user->id,
                     'month' => "$month-$year",
@@ -222,7 +233,8 @@ class PayrollController extends Controller
                     'invalid_workdays' => $workingDays - $validWorkdays,
                     'salary_received' => $salaryReceivedDay,
                     'processed_by' => Auth::id(),
-                    'updated_at' => now('Asia/Ho_Chi_Minh'), // Chỉ định múi giờ Việt Nam
+                    'leave_without_leave' => $leaveWithoutLeave,
+                    'updated_at' => now('Asia/Ho_Chi_Minh'),
                 ];
 
                 PayRoll::updateOrCreate($attributesDay, values: $valuesDay);

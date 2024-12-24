@@ -44,7 +44,6 @@ class User extends Authenticatable
             return true;
         }
 
-        // Kiểm tra xem người dùng có quyền cụ thể không
         return $this->roles()->whereHas('permissions', callback: function ($query) use ($permission) {
             $query->where('name', $permission);
         })->exists();
@@ -62,25 +61,9 @@ class User extends Authenticatable
         return $this->hasOne(SalaryLevel::class, 'user_id')->latest('id');
     }
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function proposals() {
+        return $this->hasMany(Proposal::class, 'user_id');
+    }
 
     
 

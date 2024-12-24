@@ -2,7 +2,7 @@
 @section('title', 'Đề xuất nghỉ phép')
 
 @section('content')
-    <h1 style="font-size: 30px; font-weight: bold;">Đơn Phép</h1>
+<h1 style="font-size: 30px; font-weight: bold;">Đơn Phép</h1>
 
 
 <div class="card-body">
@@ -17,7 +17,8 @@
             {{ session('success') }}
         </div>
     @endif
-    <x-leave-modal :id="'exampleModalLeaves'" :dexuats="$dexuats" :restTypes="$restTypes" :typeOfVacations="$typeOfVacations" :ngayPheps="$ngayPheps"></x-leave-modal>
+    <x-leave-modal :id="'exampleModalLeaves'" :dexuats="$dexuats" :restTypes="$restTypes"
+        :typeOfVacations="$typeOfVacations" :ngayPheps="$ngayPheps"></x-leave-modal>
     <!-- Table -->
     <div class="row mb-3">
         <div class="col-md-6">
@@ -36,7 +37,13 @@
 
         </div>
     </div>
-
+    @if ($errors->any())
+        <ul class="text-red ml-5">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    @endif
     <table id="payrollTable" class="table table-bordered table-hover">
         <thead>
             <tr>

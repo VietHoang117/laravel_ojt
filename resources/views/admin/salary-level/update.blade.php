@@ -16,10 +16,6 @@
                 <label for="daily_rate">Lương Ngày:</label>
                 <input type="number" name="daily_rate" value="{{ $data->daily_rate }}" class="form-control" required>
             </div>
-            <div class="form-group">
-                <label for="monthly_rate">Lương Tháng:</label>
-                <input type="number" name="monthly_rate" value="{{ $data->monthly_rate }}" class="form-control" required>
-            </div>
             <button type="button" class="btn btn-primary" onclick="window.history.back()">Quay Lại</button>
 
             <button type="submit" class="btn btn-primary">Cập nhật</button>

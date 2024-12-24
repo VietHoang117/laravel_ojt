@@ -6,6 +6,7 @@ use App\Models\SalaryLevel;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 
 class SalaryLevelController extends Controller
@@ -13,8 +14,19 @@ class SalaryLevelController extends Controller
     // Hiển thị danh sách các bậc lương
     public function index()
     {
-        $data = SalaryLevel::with(relations: 'user')->paginate(10);
-        return view('admin.salary-level.index', ['data' => $data]);
+        $salaryLevels = SalaryLevel::select('level_name')->distinct()->get();
+
+        $users = User::whereIn('id', SalaryLevel::pluck('user_id'))->get();
+
+        $users = User::all();
+
+        $salaryLevels->each(function ($salary) use ($users) {
+            $userIdsInLevel = SalaryLevel::where('level_name', $salary->level_name)->pluck('user_id');
+            
+            $salary->users = $users->whereIn('id', $userIdsInLevel);
+            
+        });
+        return view('admin.salary-level.index', ['salaryLevels' => $salaryLevels]);
 
 
     }
@@ -22,34 +34,39 @@ class SalaryLevelController extends Controller
     // Hiển thị form tạo bậc lương mới
     public function create()
     {
-        $users = User::select('id', 'name')->whereHas('roles',function($query) {
+        $users = User::select('id', 'name')->whereHas('roles', function ($query) {
             return $query->where('is_system_role', '!=', true);
-        })->get();
+        })
+            ->get();
         return view('admin.salary-level.create', ['users' => $users]);
     }
 
-    public function save(Request $request){
+    public function save(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'user_id'=>'required',
-            'level_name' => 'required|string|max:255',
+            'user_id' => 'required|array',
+            'user_id.*' => 'exists:users,id',
+            'level_name' => 'required|string|max:255|unique:salary_levels,level_name',
             'daily_rate' => 'required',
-            'monthly_rate' => 'required',
-
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)
-                        ->withInput();
+                ->withInput();
+        }
+        $selectedUsers = $request->input('user_id'); // Mảng user_id
+        $levelName = $request->input('level_name');
+        $dailyRate = $request->input('daily_rate');
+
+        foreach ($selectedUsers as $userId) {
+            SalaryLevel::updateOrCreate([
+                'user_id' => $userId,
+            ], [
+                'level_name' => $levelName,
+                'daily_rate' => $dailyRate,
+            ]);
         }
 
-        $inputs = $request->only([
-            'user_id',
-            'level_name',
-            'daily_rate',
-            'monthly_rate'
-        ]);
-
-        SalaryLevel::create($inputs);
         return redirect()->route('salarylevels.index')->with('success', 'Bậc lương đã được thêm mới thành công.');
     }
 
@@ -68,8 +85,6 @@ class SalaryLevelController extends Controller
         $validator = Validator::make($request->all(), [
             'level_name' => 'required|string|max:255',
             'daily_rate' => 'required',
-            'monthly_rate' => 'required',
-
         ]);
 
         if ($validator->fails()) {
@@ -78,37 +93,37 @@ class SalaryLevelController extends Controller
 
         $inputs = $request->only([
             'level_name',
-            'daily_rate',
-            'monthly_rate'
+            'daily_rate'
         ]);
 
         $data = SalaryLevel::query()->findOrFail($id);
 
         $data->fill($inputs)->update();
 
-        // Redirect to payrolls index page after successful update
         return redirect()->route('salarylevels.index');
     }
 
-    // Xóa bậc lương
-    public function delete($id) {
-        $data = SalaryLevel::query()->findOrFail($id);
-        $data->delete();
-        return back()->with('success', 'Xóa thành công!');
+    public function delete($user_id)
+    {
+        $ids = SalaryLevel::where('user_id', $user_id)->first();
+
+        $ids->delete();
+
+        return redirect()->route('salarylevels.index')->with('success', 'Bậc lương đã được xóa thành công.');
     }
 
     public function getSalaryLevel($id)
-{
-    $data = SalaryLevel::find($id);
+    {
+        $data = SalaryLevel::find($id);
 
-    if (!$data) {
-        return response()->json(['error' => 'Bậc lương không tồn tại'], 404);
+        if (!$data) {
+            return response()->json(['error' => 'Bậc lương không tồn tại'], 404);
+        }
+
+        return response()->json([
+            'daily_rate' => $data->daily_rate,
+            'monthly_rate' => $data->monthly_rate
+        ]);
     }
-
-    return response()->json([
-        'daily_rate' => $data->daily_rate,
-        'monthly_rate' => $data->monthly_rate
-    ]);
-}
 
 }
