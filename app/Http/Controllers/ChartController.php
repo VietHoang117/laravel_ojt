@@ -156,7 +156,7 @@ class ChartController extends Controller
             $userNames[] = $user->name;
 
             $payroll = optional($user->payrolls)
-                ->where('type', 'month')
+                ->where('type', 'day')
                 ->first();
 
             $payrolls[] = $payroll->salary_received ?? 0;
