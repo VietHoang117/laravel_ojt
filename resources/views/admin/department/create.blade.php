@@ -29,7 +29,7 @@
                             
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <label class="input-group-text" for="inputGroupSelect01">Chọn người được xử lí</label>
+                                    <label class="input-group-text" for="inputGroupSelect01">Chọn Phòng Ban Cha</label>
                                 </div>
                                 <select class="custom-select" name="parent_id" id="inputGroupSelect01">
                                     <option selected>Chọn phòng ban...</option>

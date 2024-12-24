@@ -3,7 +3,7 @@
     Duyệt Giải Trình
 @stop
 @section('content')
-    <h1 style="font-size: 30px; font-weight: bold;">Duyệt Ngày Công</h1>
+    <h1 style="font-size: 30px; font-weight: bold;">Duyệt Giải Trình</h1>
     <div class="card-body">
         <table id="payrollTable" class="table table-bordered table-hover">
             <div class="col-md-6">
