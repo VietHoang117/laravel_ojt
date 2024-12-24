@@ -36,9 +36,11 @@ class SalaryLevelController extends Controller
     {
         $users = User::select('id', 'name')->whereHas('roles', function ($query) {
             return $query->where('is_system_role', '!=', true);
-        })
-            ->get();
-        return view('admin.salary-level.create', ['users' => $users]);
+        })->get();
+
+        $salaryLevels = SalaryLevel::select('level_name', 'daily_rate')->distinct()->get();
+
+        return view('admin.salary-level.create', ['users' => $users, 'salaryLevels' => $salaryLevels]);
     }
 
     public function save(Request $request)
@@ -46,10 +48,10 @@ class SalaryLevelController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|array',
             'user_id.*' => 'exists:users,id',
-            'level_name' => 'required|string|max:255|unique:salary_levels,level_name',
+            'level_name' => 'required|string|max:255',
             'daily_rate' => 'required',
         ]);
-
+        
         if ($validator->fails()) {
             return back()->withErrors($validator)
                 ->withInput();
