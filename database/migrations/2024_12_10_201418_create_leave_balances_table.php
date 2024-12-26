@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->integer('year');
-            $table->integer('total_leaves')->default(0)->nullable();
+            $table->integer('total_leaves')->default(12)->nullable();
             $table->integer('used_leaves')->default(0);
             $table->integer('remaining_leaves')->default(0);
             $table->timestamps();

@@ -14,7 +14,7 @@ class SalaryLevelController extends Controller
     // Hiển thị danh sách các bậc lương
     public function index()
     {
-        $salaryLevels = SalaryLevel::select('level_name')->distinct()->get();
+        $salaryLevels = SalaryLevel::select('level_name','daily_rate')->distinct()->get();
 
         $users = User::whereIn('id', SalaryLevel::pluck('user_id'))->get();
 

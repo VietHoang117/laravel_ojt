@@ -17,6 +17,7 @@ Bậc Lương
                 <thead>
                     <tr>
                         <th>Bậc lương</th>
+                        <th>Lương Ngày</th>
                         <th>Tổng người dùng</th>
                         <th>Chi tiết</th>
                     </tr>
@@ -25,6 +26,7 @@ Bậc Lương
                     @foreach ($salaryLevels as $salaryLevel)
                         <tr>
                             <td>{{ $salaryLevel->level_name }}</td>
+                            <td>{{ $salaryLevel->daily_rate }}</td>
                             <td>
                                 {{ count($salaryLevel->users) }}
                             </td>

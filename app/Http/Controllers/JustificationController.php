@@ -23,8 +23,9 @@ class JustificationController extends Controller
                 $query->whereHas('user', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
                 });
+                
             })
-            ->paginate(10);
+            ->paginate(7);
             $status = JustificationStatusEnum::getValues();
         return view('admin.justification.index', compact(['data','status']));
     }
@@ -99,7 +100,7 @@ class JustificationController extends Controller
 
         Mail::to($data->user->email)->send(new SettingEmail([
             'name' => $data->user->name,
-            'content'=>'Yêu cầu của bạn đã được:'.$data->status,
+            'content'=>' Chúng tôi muốn thông báo yêu cầu của bạn đã được:'.$data->status,
         ]));
 
         return back()->with('message', 'Giải trình đã được xử lý.');

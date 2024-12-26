@@ -22,9 +22,7 @@ Bảng Lương
                     <a href="{{ route('payrolls.update-wage') }}" class="btn btn-primary">
                         <i class="fas fa-sync-alt"></i> Cập nhật lương tháng này
                     </a>
-                    <a href="{{ route('payrolls.store') }}" class="btn btn-success">
-                        <i class="fas fa-plus"></i> Thêm mới
-                    </a>
+                    
                 </div>
             @endif
         </div>

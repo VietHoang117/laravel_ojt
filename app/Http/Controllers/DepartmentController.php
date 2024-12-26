@@ -40,7 +40,7 @@ class DepartmentController extends Controller
             'room_name',
             'status'
         ]);
-
+        
         $inputs['status'] = $request->has('status') ? DepartmentStatusEnum::ACTIVATED : DepartmentStatusEnum::DEACTIVATED;
 
         Department::create($inputs);
