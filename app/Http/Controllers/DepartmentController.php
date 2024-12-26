@@ -34,14 +34,20 @@ class DepartmentController extends Controller
             return back()->withErrors($validator)
                         ->withInput();
         }
-
+        
         $inputs = $request->only([
             'parent_id',
             'room_name',
             'status'
         ]);
         
+        if (empty($inputs['parent_id'])) {
+            $inputs['parent_id'] = 0;
+        }
+        
         $inputs['status'] = $request->has('status') ? DepartmentStatusEnum::ACTIVATED : DepartmentStatusEnum::DEACTIVATED;
+
+
 
         Department::create($inputs);
 

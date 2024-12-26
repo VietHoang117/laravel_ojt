@@ -32,7 +32,7 @@
                                     <label class="input-group-text" for="inputGroupSelect01">Chọn Phòng Ban Cha</label>
                                 </div>
                                 <select class="custom-select" name="parent_id" id="inputGroupSelect01">
-                                    <option selected>Chọn phòng ban...</option>
+                                    <option selected value="">Chọn phòng ban...</option>
                                     @foreach ($departments as $department)
                                         <option value="{{ $department->id }}"
                                             {{ old('parent_id', $department->parent_id) == $department->id ? 'selected' : '' }}>
